@@ -1,0 +1,56 @@
+{% extends "app/base_site.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Registro de franquicias de inmobiliaria</h3>
+      </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Formulario de inscripción de inmobiliarias<small>Formulario para la inscripción de inmobiliarias</small></h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <br />
+            {% if espacios %}
+            <div class="alert alert-danger alert-dismissible">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>¡Advertencia!</strong> {{espacios}}
+            </div>
+            <br />
+            {% endif %}
+            <form action="" method="POST" class="form-horizontal form-label-left" enctype="multipart/form-data" id="inmobiliaria-form">
+              {% csrf_token %}
+              <div class="item form-group">
+                <label class="control-label col-md-3" for="id_nombre_inmobiliaria">Nombre de inmobiliaria</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="id_nombre_inmobiliaria" class="form-control" name="nombre" type="text" placeholder="Nombre sin espacios" required="required" data-validate-words="1">
+                </div>
+              </div>
+              <div class="item form-group">
+                <label class="control-label col-md-3" for="id_nombre_inmobiliaria">Nombre de representante</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="id_cliente" class="form-control" name="representante" type="text" disabled="disabled" value="{{cliente}}">
+                </div>
+              </div>
+              <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block javascripts %}
+  {{ block.super }}
+  <!-- validator -->
+  <script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}

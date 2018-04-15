@@ -20,19 +20,31 @@
           </div>
           <div class="x_content">
             <br />
-            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data" id="usuario-form">{% csrf_token %}
-              <div class="form-group">
-                <label class="control-label" for="id_user">Usuario</label>
-                <input id="id_correo" class="form-control" name="correo" type="text" value="{{cliente}}"
-                disabled="disabled">
+            {% if no_match %}
+            <p class="text-danger">
+              {{no_match}}
+            </p>
+            {% endif %}
+            <form action="" method="POST" data-parsley-validate class="form-horizontal" enctype="multipart/form-data" id="usuario-form">
+              {% csrf_token %}
+              <div class="item form-group">
+                <label class="control-label col-md-3" for="id_user">Usuario</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="id_correo" class="form-control" name="correo" type="text" value="{{cliente.correo}}"
+                  disabled="disabled">
+                </div>
               </div>
-              <div class="form-group">
-                <label class="control-label" for="id_user">Contraseña</label>
-                <input id="id_password" class="form-control" name="password" type="password">
+              <div class="item form-group">
+                <label for="password" class="control-label col-md-3">Ingrese una contraseña</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="password" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" data-parsley-minlength="8" data-parsley-maxlength="20" data-parsley-equalto="#password2">
+                </div>
               </div>
-              <div class="form-group">
-                <label class="control-label" for="id_user">Repita la contraseña</label>
-                <input id="id_password-conf" class="form-control" name="password-conf" type="password">
+              <div class="item form-group">
+                <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repita la contraseña</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="password2" type="password" name="password2" class="form-control col-md-7 col-xs-12" required="required" data-parsley-equalto="#password">
+                </div>
               </div>
               <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
             </form>

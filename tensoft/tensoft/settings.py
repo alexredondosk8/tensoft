@@ -74,6 +74,9 @@ PUBLIC_SCHEMA_URLCONF = 'tensoft.public_urls'
 
 PUBLIC_SCHEMA_NAME = 'public'
 
+LOGIN_URL = '/cuenta/login/'
+LOGOUT_REDIRECT_URL = '/cuenta/login/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -31,9 +31,33 @@
             <li><a href="index3.html">Dashboard3</a></li>
           </ul> -->
         </li>
-        <li><a><i class="fa fa-building-o"></i> Gestión de inmobiliarias <span class="fa fa-chevron-down"></span></a>
+        {% if request.user.is_authenticated %}
+        <li><a><i class="fa fa-users"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="inmobiliarias"> Información general</a></li>
+            <li><a href="/cuenta/ver/"> Ver</a></li>
+            <li><a href="/cuenta/actualizar/"> Actualizar</a></li>
+            <li><a href="/cuenta/eliminar/"> Eliminar</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        {% if request.user.is_superuser %}
+        <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmobiliarias/"> Información general</a></li>
+            <li><a href="/inmobiliarias/listado/"> Lista de inmobiliarias</a></li>
+            <li><a href="/inmobiliarias/pendientes/"> En espera de aprobación</a></li>
+            <li><a href="/inmobiliarias/baja"> Solicitudes de baja</a></li>
+            <li><a href="/inmobiliarias/activas/"> Activas</a></li>
+            <li><a href="/inmobiliarias/inactivas"> Inactivas</a></li>
+            <li><a href="/inmobiliarias/rechazadas/"> Rechazadas</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmobiliarias/"> Información general</a></li>
+            <li><a href="/inmobiliarias/registrar/"> Solicitar franquicia</a></li>
+            <li><a href="/inmobiliarias/pendientes/"> En espera de aprobación</a></li>
           </ul>
         </li>
       </ul>
