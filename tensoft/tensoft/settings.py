@@ -42,6 +42,7 @@ SHARED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'bootstrap3',
+    'captcha',
 )
 
 TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
@@ -56,6 +57,9 @@ INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
 
 TENANT_MODEL = "inmobiliaria_tenant.Inmobiliaria"  # app.Model
 TENANT_DOMAIN_MODEL = "inmobiliaria_tenant.Domain"
+
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LcdV1MUAAAAAHM8NjfYANxwvPYotHr_zz-wlmDi'
+NOCAPTCHA = True
 
 MIDDLEWARE_CLASSES = [
     'django_tenants.middleware.TenantMiddleware',
