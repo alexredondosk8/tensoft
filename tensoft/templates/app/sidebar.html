@@ -32,7 +32,7 @@
           </ul> -->
         </li>
         {% if request.user.is_authenticated %}
-        <li><a><i class="fa fa-users"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
+        <li><a><i class="fa fa-user"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/cuenta/ver/"> Ver</a></li>
             <li><a href="/cuenta/actualizar/"> Actualizar</a></li>
@@ -40,7 +40,7 @@
           </ul>
         </li>
         {% endif %}
-        {% if request.user.is_superuser %}
+        {% if request.user.groups.all.0.name == "superadministrador" %}
         <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/inmobiliarias/"> Información general</a></li>
@@ -52,7 +52,7 @@
             <li><a href="/inmobiliarias/rechazadas/"> Rechazadas</a></li>
           </ul>
         </li>
-        {% endif %}
+        {% elif request.user.groups.all.0.name == "cliente-inmobiliaria" %}
         <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/inmobiliarias/"> Información general</a></li>
@@ -60,6 +60,7 @@
             <li><a href="/inmobiliarias/pendientes/"> En espera de aprobación</a></li>
           </ul>
         </li>
+        {% endif %}
       </ul>
     </div>
   </div>
