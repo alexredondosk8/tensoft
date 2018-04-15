@@ -1,0 +1,44 @@
+{% extends "app/base_site.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Registro de clientes</h3>
+      </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Formulario de inscripción <small>Formulario para la inscripción de clientes</small></h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <br />
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data" id="usuario-form">{% csrf_token %}
+              <div class="form-group">
+                <label class="control-label" for="id_user">Usuario</label>
+                <input id="id_correo" class="form-control" name="correo" type="text" value="{{cliente}}"
+                disabled="disabled">
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_user">Contraseña</label>
+                <input id="id_password" class="form-control" name="password" type="password">
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="id_user">Repita la contraseña</label>
+                <input id="id_password-conf" class="form-control" name="password-conf" type="password">
+              </div>
+              <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
