@@ -5,22 +5,58 @@ from django.views.generic import TemplateView, CreateView
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from .models import Cliente, Inmobiliaria
+from .forms import *
 
 # Create your views here.
 class Inicio(TemplateView):
     template_name = 'app/index.html'
 
-class ClienteCreateView(CreateView):
-    model = Cliente
-    fields = ['nombre', "apellidos", "cedula", "correo"]
-    success_url = "/cuenta/registrar/usuario"
+class ClienteCreateView(TemplateView):
+    template_name = "inmobiliaria_tenant/cliente_form.html"
 
-    def form_valid(self, form):
-        cliente_registrado = form.instance
-        self.request.session['cedula'] = self.request.POST['cedula']
-        self.object = form.save()
+    def get_context_data(self, **kwargs):
+        context = super(ClienteCreateView, self).get_context_data(**kwargs)
+        context['form'] = FormRegistroCliente
 
-        return super(ClienteCreateView, self).form_valid(form)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(ClienteCreateView, self).get_context_data(**kwargs)
+        print(request.POST)
+
+        form_cliente = FormRegistroCliente(request.POST)
+
+        if form_cliente.is_valid():
+            datos = form_cliente.cleaned_data
+            nombre = datos['nombre']
+            apellidos = datos['apellidos']
+            cedula = datos['cedula']
+            correo = datos['correo']
+
+            # VALIDA QUE EL CORREO NO ESTÉ REGISTRADO EN LA BD
+            usuario = User.objects.get(username=correo)
+
+            if not usuario:
+                cliente_registrado = Cliente(
+                    nombre=nombre,
+                    apellidos=apellidos,
+                    cedula=cedula,
+                    correo=correo
+                )
+
+                cliente_registrado.save()
+                request.session['cedula'] = cedula
+
+                return HttpResponseRedirect('/cuenta/registrar/usuario')
+
+            else:
+                context['form'] = form_cliente
+                context['existe'] = "Ya existe una cuenta vinculada con el correo " + correo + "."
+                return render(request, self.template_name, context)
+
+        else:
+            context['form'] = form_cliente
+            return render(request, self.template_name, context)
 
 class UsuarioClienteCreateView(TemplateView):
     model = User
@@ -75,7 +111,7 @@ class UsuarioClienteCreateView(TemplateView):
             context['cliente'] = cliente
             return render(request, self.template_name, context)
 
-        return render(request, "/cuenta/login/", context)
+        return redirect("/cuenta/login/", request=request)
 
 class Login(TemplateView):
     template_name = "login.html"
@@ -86,8 +122,8 @@ class Login(TemplateView):
         if registro_exitoso:
             context['registro'] = registro_exitoso
             del self.request.session['nuevo-registro']
-        """usuario_actual = self.request.user
-        context['usuario'] = usuario_actual.username"""
+        else:
+            print("nada en el session para mostrar")
         return context
 
     def post(self, request, *args, **kwargs):
