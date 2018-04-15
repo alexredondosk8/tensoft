@@ -34,9 +34,13 @@ class ClienteCreateView(TemplateView):
             correo = datos['correo']
 
             # VALIDA QUE EL CORREO NO ESTÉ REGISTRADO EN LA BD
-            usuario = User.objects.get(username=correo)
+            try:
+                usuario = User.objects.get(username=correo)
+                context['form'] = form_cliente
+                context['existe'] = "Ya existe una cuenta vinculada con el correo " + correo + "."
+                return render(request, self.template_name, context)
 
-            if not usuario:
+            except:
                 cliente_registrado = Cliente(
                     nombre=nombre,
                     apellidos=apellidos,
@@ -48,12 +52,6 @@ class ClienteCreateView(TemplateView):
                 request.session['cedula'] = cedula
 
                 return HttpResponseRedirect('/cuenta/registrar/usuario')
-
-            else:
-                context['form'] = form_cliente
-                context['existe'] = "Ya existe una cuenta vinculada con el correo " + correo + "."
-                return render(request, self.template_name, context)
-
         else:
             context['form'] = form_cliente
             return render(request, self.template_name, context)
