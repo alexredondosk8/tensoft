@@ -1,0 +1,17 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %} Reporte de problemas en desarrollo {% endblock title %}
+
+{% block contenido %}
+  <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data" id="usuario-form">
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.prioridad  %}
+    {% bootstrap_field form.mensaje  %}
+    {% bootstrap_field form.imagen %}
+    {% bootstrap_field form.desarrollador set_disabled=True %}
+    <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
+  </form>
+{% endblock contenido %}
