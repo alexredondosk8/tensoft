@@ -17,7 +17,10 @@ from django.conf.urls import url, include
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from inmobiliaria_tenant.views import *
+from parreporter_tool.views import *
+from django.conf.urls.static import static
 
 urlpatterns_cuenta = [
     url(r'^registrar/$', ClienteCreateView.as_view(), name="registrar-cliente"),
@@ -30,9 +33,17 @@ urlpatterns_inmobiliarias = [
     url(r'^registrar/$', RegistrarInmobiliaria.as_view(), name="registrar-inmobiliaria"),
     url(r'^pendientes/$', InmobiliariasPendientes.as_view(), name="inmobiliarias-pendientes"),
 ]
+
+urlpatterns_dev = [
+    #url(r'^$', )
+    url(r'^reportar/$', login_required(ReportarProblema.as_view()), name="reportar-problema"),
+    #url(r'^reportar/$', CerrarProblema.as_view(), name="cerrar-problema")
+]
+
 urlpatterns = [
     url(r'^$', Inicio.as_view(), name='inicio'),
     url(r'^admin/', admin.site.urls),
     url(r'^cuenta/', include(urlpatterns_cuenta)),
     url(r'^inmobiliarias/', include(urlpatterns_inmobiliarias)),
-]
+    url(r'^dev/', include(urlpatterns_dev)),
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

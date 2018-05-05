@@ -116,6 +116,7 @@ class Login(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Login, self).get_context_data(**kwargs)
+        print(kwargs)
         registro_exitoso = self.request.session.get('nuevo-registro')
         if registro_exitoso:
             context['registro'] = registro_exitoso
@@ -130,14 +131,14 @@ class Login(TemplateView):
         password = request.POST['password']
 
         user = authenticate(username=username, password=password)
-        print (user)
+        print (context)
         if user is not None:
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect('/')
         else:
             context['no_usuario'] = 'Usuario o contraseña inválidos'
-        return render(request, 'registration/login.html', context)
+        return render(request, self.template_name, context)
 
 class RegistrarInmobiliaria(TemplateView):
     model = Inmobiliaria
