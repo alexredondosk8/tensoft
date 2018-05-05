@@ -43,6 +43,7 @@ SHARED_APPS = (
     'django.contrib.admin',
     'bootstrap3',
     'captcha',
+    'parreporter_tool',
 )
 
 TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
@@ -136,6 +137,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'soporte.tensoft@gmail.com'
+EMAIL_HOST_PASSWORD = 'univalle'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Soporte TenSoft <noreply@TenSoft.com>'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -162,4 +170,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'static_collected')
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/'
