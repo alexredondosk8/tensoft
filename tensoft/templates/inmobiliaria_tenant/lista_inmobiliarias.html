@@ -27,18 +27,61 @@
       </tr>
     </thead>
     <tbody>
-      {% for inmobiliaria in lista.alta %}
-        <tr>
-          <td><a href="#"><strong>{{inmobiliaria.nombre}}</strong></a></td>
-          <td>{{inmobiliaria.fecha_registro}}</td>
-          <td>{{inmobiliaria.get_revision}}</td>
-          <td>{{inmobiliaria.get_estado}}</td>
-          {% if request.user.is_superuser %}
-            <td>{{inmobiliaria.representante}}</td>
-            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><button class="btn btn-primary btn-block">Ir a aprobar</button></a></td>
-          {% endif %}
-        </tr>
-      {% endfor %}
+      {% if lista_alta %}
+        {% for inmobiliaria in lista_alta %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+              <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><button class="btn btn-primary btn-block">Ir a aprobar</button></a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% elif lista_baja %}
+        {% for inmobiliaria in lista_baja %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_solicitud_baja}}</td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+              <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><button class="btn btn-primary btn-block">Ir a aprobar</button></a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% elif lista_activas %}
+        {% for inmobiliaria in lista_activas %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+            {% endif %}
+            <td>{{inmobiliaria.get_baja}}</td>
+            <td><a href="http://{{inmobiliaria.schema_name}}.localhost:8000" target="_blank">Visitar página</a></td>
+          </tr>
+        {% endfor %}
+        {% elif lista_inactivas %}
+          {% for inmobiliaria in lista_inactivas %}
+            <tr>
+              <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+              <td>{{inmobiliaria.fecha_baja}}</td>
+              <td>{{inmobiliaria.fecha_solicitud_baja}}</td>
+              <td>{{inmobiliaria.fecha_registro}}</td>
+              <td>{{inmobiliaria.get_revision}}</td>
+              {% if request.user.is_superuser %}
+                <td>{{inmobiliaria.representante}}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 </div>
