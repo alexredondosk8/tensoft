@@ -1,0 +1,66 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %} Información de inmobiliaria {% endblock title %}
+
+{% block titulo_contenido %}Detalles de inmobiliaria{% endblock titulo_contenido %}
+{% block titulo_especifico %}Información de {{inmobiliaria}}{% endblock titulo_especifico %}
+
+{% block contenido %}
+{% if success %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+  <strong>¡Éxito!</strong> {{success}}
+</div>
+{% endif %}
+<div class="table-responsive">
+  <table class="table table-hover jambo_table bulk_action">
+    <tbody>
+      <tr>
+        <td>Nombre</td>
+        <td>{{inmobiliaria}}</td>
+      </tr>
+      <tr>
+        <td>Representante</td>
+        <td>{{inmobiliaria.representante}}</td>
+      </tr>
+      <tr>
+        <td>Estado</td>
+        <td>{{inmobiliaria.get_estado}}</td>
+      </tr>
+      <tr>
+        <td>Fecha de registro</td>
+        <td>{{inmobiliaria.fecha_registro}}</td>
+      </tr>
+      <tr>
+        <td>Fecha de aprobación</td>
+        <td>{{inmobiliaria.get_revision}}</td>
+      </tr>
+      <tr>
+        <td>Solicitud de baja</td>
+        <td>{{inmobiliaria.get_baja}}</td>
+      </tr>
+      <tr>
+        <td>Fecha aprobación de baja</td>
+        <td>{{inmobiliaria.get_fecha_baja}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% if request.user.is_superuser and inmobiliaria.get_estado == 'En espera de revisión' %}
+<hr>
+<form method="post">
+  {% csrf_token %}
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    <button class="btn btn-success btn-block" formmethod="post" name="aprobar_alta">Aprobar inmobiliaria</button>
+  </div>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    <button class="btn btn-danger btn-block" formmethod="post" name="rechazar_alta">Rechazar inmobiliaria</button>
+  </div>
+</form>
+{% endif %}
+{% endblock contenido %}

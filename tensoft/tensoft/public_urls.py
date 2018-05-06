@@ -31,7 +31,8 @@ urlpatterns_cuenta = [
 
 urlpatterns_inmobiliarias = [
     url(r'^registrar/$', RegistrarInmobiliaria.as_view(), name="registrar-inmobiliaria"),
-    url(r'^pendientes/$', InmobiliariasPendientes.as_view(), name="inmobiliarias-pendientes"),
+    url(r'^pendientes-alta/$', InmobiliariasPendientesAprobacionAlta.as_view(), name="inmobiliarias-pendientes"),
+    url(r'^(?P<id>[\w.@+-]+)/$', DetallesInmobiliaria.as_view(), name="detalles-inmobiliaria")
 ]
 
 urlpatterns_dev = [
