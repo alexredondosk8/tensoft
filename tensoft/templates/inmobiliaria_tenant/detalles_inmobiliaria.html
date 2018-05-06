@@ -15,6 +15,13 @@
   </button>
   <strong>¡Éxito!</strong> {{success}}
 </div>
+{% elif solicitud_baja %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+  {{solicitud_baja}}
+</div>
 {% endif %}
 <div class="table-responsive">
   <table class="table table-hover jambo_table bulk_action">
@@ -33,7 +40,12 @@
       </tr>
       <tr>
         <td>Representante</td>
-        <td>{{inmobiliaria.representante}}</td>
+        <td><a href="/cuenta/my/">
+          <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-default" formmethod="post" name="ir_repre">{{inmobiliaria.representante}}</button>
+          </form>
+        </a></td>
       </tr>
       <tr>
         <td>Estado</td>
@@ -52,15 +64,14 @@
         <td>{{inmobiliaria.get_baja}}</td>
       </tr>
       <tr>
-        <td>Fecha aprobación de baja</td>
+        <td>Fecha aprobación baja</td>
         <td>{{inmobiliaria.get_fecha_baja}}</td>
       </tr>
     </tbody>
   </table>
 </div>
-
-{% if request.user.is_superuser and inmobiliaria.get_estado == 'En espera de revisión' %}
 <hr>
+{% if request.user.is_superuser and inmobiliaria.get_estado == 'En espera de aprobación' %}
 <form method="post">
   {% csrf_token %}
   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -70,5 +81,41 @@
     <button class="btn btn-danger btn-block" formmethod="post" name="rechazar_alta">Rechazar inmobiliaria</button>
   </div>
 </form>
+{% elif request.user.is_superuser and inmobiliaria.get_estado == 'En espera de aprobación de cierre' and inmobiliaria.solicitud_baja == True %}
+<form method="post">
+  {% csrf_token %}
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    <button class="btn btn-success btn-block" formmethod="post" name="aprobar_baja">Aprobar baja inmobiliaria</button>
+  </div>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    <button class="btn btn-danger btn-block" formmethod="post" name="rechazar_baja">Rechazar baja inmobiliaria</button>
+  </div>
+</form>
+{% elif cliente and inmobiliaria.get_estado == 'Activa' and inmobiliaria.solicitud_baja == False %}
+<div class="row">
+  <form method="post">
+    {% csrf_token %}
+    <center>
+      <button class="btn btn-danger" name="solicitar-baja">Solicitar baja</button>
+    </center>
+  </form>
+</div>
+{% elif cliente and inmobiliaria.get_estado == 'En espera de aprobación de cierre' %}
+<div class="row">
+  <form method="post">
+    {% csrf_token %}
+    <center>
+      <button class="btn btn-primary" name="cancelar-baja">Cancelar solicitud de baja</button>
+    </center>
+  </form>
+</div>
 {% endif %}
 {% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+  </script>
+{% endblock javascripts %}
