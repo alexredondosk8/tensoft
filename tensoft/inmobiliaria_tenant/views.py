@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, render_to_response
+from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, CreateView
 from django.views.generic import ListView
 from django.http import HttpResponseRedirect
@@ -146,6 +147,31 @@ class Login(TemplateView):
             context['no_usuario'] = 'Usuario o contraseña inválidos'
         return render(request, self.template_name, context)
 
+class CuentaCliente(TemplateView):
+    template_name = "inmobiliaria_tenant/cuenta_cliente.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CuentaCliente, self).get_context_data(**kwargs)
+
+        print(kwargs)
+
+        if 'id_cliente' in kwargs:
+            representante = Cliente.objects.get(cedula=kwargs['id_cliente'])
+
+        else:
+            representante = Cliente.objects.get(usuario=self.request.user)
+
+        if self.request.user == representante.usuario or self.request.user.is_superuser:
+            context['representante'] = representante
+
+            if self.request.user == representante.usuario:
+                context['owner'] = 'owner'
+
+        else:
+            raise PermissionDenied
+
+        return context
+
 class RegistrarInmobiliaria(TemplateView):
     model = Inmobiliaria
     fields = ['nombre', 'representante']
@@ -192,7 +218,7 @@ class InmobiliariasPendientesAprobacionAlta(ListView):
 
         if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
             context = super(InmobiliariasPendientesAprobacionAlta, self).get_context_data(**kwargs)
-            lista_inmobiliarias = lista_inmobiliarias_pendientes(self.request.user)
+            lista_inmobiliarias = lista_inmobiliarias_pendientes_alta(self.request.user)
             paginator = Paginator(lista_inmobiliarias, self.paginate_by)
 
             context['tipo_lista'] = 'Para dar Alta'
@@ -203,7 +229,85 @@ class InmobiliariasPendientesAprobacionAlta(ListView):
             elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
                 context['campos'] = ['Nombre', 'Fecha de registro', 'Fecha de aprobación',
                                 'Estado']
-            context['lista'] = lista_inmobiliarias
+            context['lista_alta'] = lista_inmobiliarias
+        else:
+            raise PermissionDenied
+
+        return context
+
+class InmobiliariasPendientesAprobacionBaja(ListView):
+    model = Inmobiliaria
+    template_name = "inmobiliaria_tenant/lista_inmobiliarias.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(InmobiliariasPendientesAprobacionBaja, self).get_context_data(**kwargs)
+
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+            lista_inmobiliarias = lista_inmobiliarias_pendientes_baja(self.request.user)
+            paginator = Paginator(lista_inmobiliarias, self.paginate_by)
+
+            context['tipo_lista'] = 'Para dar Baja'
+
+            if self.request.user.is_superuser:
+                context['campos'] = ['Nombre', 'Fecha solicitud baja', 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado', 'Representante', 'Acción solicitada']
+            elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['campos'] = ['Nombre', 'Fecha solicitud baja' 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado']
+            context['lista_baja'] = lista_inmobiliarias
+        else:
+            raise PermissionDenied
+
+        return context
+
+class InmobiliariasActivas(ListView):
+    model = Inmobiliaria
+    template_name = "inmobiliaria_tenant/lista_inmobiliarias.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(InmobiliariasActivas, self).get_context_data(**kwargs)
+
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+            lista_inmobiliarias = lista_inmobiliarias_activas(self.request.user)
+            paginator = Paginator(lista_inmobiliarias, self.paginate_by)
+
+            context['tipo_lista'] = 'Activas'
+
+            if self.request.user.is_superuser:
+                context['campos'] = ['Nombre', 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado', 'Representante', 'Solicitud de baja', 'URL']
+            elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['campos'] = ['Nombre', 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado', 'Solicitud de baja', 'URL']
+            context['lista_activas'] = lista_inmobiliarias
+        else:
+            raise PermissionDenied
+
+        return context
+
+class InmobiliariasInactivas(ListView):
+    model = Inmobiliaria
+    template_name = "inmobiliaria_tenant/lista_inmobiliarias.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(InmobiliariasInactivas, self).get_context_data(**kwargs)
+
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+            lista_inmobiliarias = lista_inmobiliarias_inactivas(self.request.user)
+            paginator = Paginator(lista_inmobiliarias, self.paginate_by)
+
+            context['tipo_lista'] = 'Cerradas'
+
+            if self.request.user.is_superuser:
+                context['campos'] = ['Nombre', 'Fecha aprobación cierre', 'Fecha solicitud cierre',
+                    'Fecha de registro', 'Fecha de aprobación', 'Representante']
+            elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['campos'] = ['Nombre', 'Fecha aprobación cierre', 'Fecha solicitud cierre',
+                    'Fecha de registro', 'Fecha de aprobación']
+            context['lista_inactivas'] = lista_inmobiliarias
         else:
             raise PermissionDenied
 
@@ -215,12 +319,22 @@ class DetallesInmobiliaria(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DetallesInmobiliaria, self).get_context_data(**kwargs)
 
+        print("ingresa al get")
+
         inmobiliaria = Inmobiliaria.objects.get(id=kwargs['id'])
         context['inmobiliaria'] = inmobiliaria
 
-        if 'success' in self.request.session:
-            context['success'] = self.request.session['success']
-            del self.request.session['success']
+        if self.request.user == inmobiliaria.representante.usuario or self.request.user.is_superuser:
+
+            if self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['cliente'] = 'cliente'
+                print("se asigna el cliente")
+            if 'success' in self.request.session:
+                context['success'] = self.request.session['success']
+                del self.request.session['success']
+
+        else:
+            raise PermissionDenied
 
         return context
 
@@ -239,13 +353,45 @@ class DetallesInmobiliaria(TemplateView):
                 tenant=inmobiliaria
             )
             dominio_inmobiliaria.save()
+            inmobiliaria.fecha_revision=datetime.now()
+            inmobiliaria.save()
 
             request.session['success'] = "Se ha aprobado la inmobiliaria exitosamente"
+            context['success'] = request.session['success']
+            del request.session['success']
 
         elif 'rechazar_alta' in request.POST:
+            inmobiliaria.fecha_revision=datetime.now()
+            inmobiliaria.save()
+
             request.session['success'] = "Se ha rechazado la inmobiliaria exitosamente"
 
-        inmobiliaria.fecha_revision=datetime.now()
-        inmobiliaria.save()
+        elif 'solicitar-baja' in request.POST:
+            inmobiliaria.solicitud_baja = True
+            inmobiliaria.fecha_solicitud_baja = datetime.now()
+            inmobiliaria.save()
+            context['solicitud_baja'] = "Se ha enviado la petición para dar de baja la inmobiliaria exitosamente"
+
+        elif 'aprobar_baja' in request.POST:
+            inmobiliaria.estado = False
+            inmobiliaria.fecha_baja = datetime.now()
+            inmobiliaria.save()
+            context['success'] = "Se ha aprobado el cierre de la inmobiliaria exitosamente"
+
+        elif 'rechazar_baja' in request.POST:
+            inmobiliaria.solicitud_baja = False
+            inmobiliaria.fecha_solicitud_baja = None
+            inmobiliaria.save()
+            context['success'] = "Se ha rechazado el cierre de la inmobiliaria exitosamente"
+
+        elif 'cancelar-baja' in request.POST:
+            inmobiliaria.solicitud_baja = False
+            inmobiliaria.fecha_solicitud_baja = None
+            inmobiliaria.save()
+            context['success']: "Se ha cancelado la solicitud de cierre exitosamente"
+
+        elif 'ir_repre' in request.POST:
+            url = reverse('cuenta-cliente', kwargs={'id_cliente': inmobiliaria.representante.cedula})
+            return HttpResponseRedirect(url)
 
         return render(request, self.template_name, context)
