@@ -24,6 +24,14 @@
         <td>{{inmobiliaria}}</td>
       </tr>
       <tr>
+        <td>Dirección URL</td>
+        {% if inmobiliaria.get_estado == True}
+          <td><a href="http://{{inmobiliaria.schema_name}}.localhost:8000" target="_blank">Visitar página</a></td>
+        {% else %}
+          <td>No disponible</td>
+        {% endif %}
+      </tr>
+      <tr>
         <td>Representante</td>
         <td>{{inmobiliaria.representante}}</td>
       </tr>
