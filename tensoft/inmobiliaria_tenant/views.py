@@ -2,10 +2,16 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import TemplateView, CreateView
+from django.views.generic import ListView
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
-from .models import Cliente, Inmobiliaria
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
+from datetime import datetime
+from .models import Cliente, Inmobiliaria, Domain
 from .forms import *
+from .utils import *
 
 # Create your views here.
 class Inicio(TemplateView):
@@ -166,7 +172,7 @@ class RegistrarInmobiliaria(TemplateView):
                 inmobiliaria = Inmobiliaria(
                     nombre = nombre_inmobiliaria,
                     representante = Cliente.objects.get(usuario=request.user),
-                    schema_name = nombre_inmobiliaria.lower()
+                    schema_name = procesar_schema_name(nombre_inmobiliaria).lower()
                 )
                 inmobiliaria.save()
         else:
@@ -174,7 +180,72 @@ class RegistrarInmobiliaria(TemplateView):
             context['cliente'] = Cliente.objects.get(usuario=self.request.user)
             return render(request, self.template_name, context)
 
-        return HttpResponseRedirect('/inmobiliarias/pendientes/')
+        return HttpResponseRedirect('/inmobiliarias/pendientes-alta/')
 
-class InmobiliariasPendientes(TemplateView):
-    template_name = "app/plain_page.html"
+class InmobiliariasPendientesAprobacionAlta(ListView):
+    model = Inmobiliaria
+    template_name = "inmobiliaria_tenant/lista_inmobiliarias.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(InmobiliariasPendientesAprobacionAlta, self).get_context_data(**kwargs)
+
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+            context = super(InmobiliariasPendientesAprobacionAlta, self).get_context_data(**kwargs)
+            lista_inmobiliarias = lista_inmobiliarias_pendientes(self.request.user)
+            paginator = Paginator(lista_inmobiliarias, self.paginate_by)
+
+            context['tipo_lista'] = 'Para dar Alta'
+
+            if self.request.user.is_superuser:
+                context['campos'] = ['Nombre', 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado', 'Representante', 'Acción solicitada']
+            elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['campos'] = ['Nombre', 'Fecha de registro', 'Fecha de aprobación',
+                                'Estado']
+            context['lista'] = lista_inmobiliarias
+        else:
+            raise PermissionDenied
+
+        return context
+
+class DetallesInmobiliaria(TemplateView):
+    template_name = "inmobiliaria_tenant/detalles_inmobiliaria.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(DetallesInmobiliaria, self).get_context_data(**kwargs)
+
+        inmobiliaria = Inmobiliaria.objects.get(id=kwargs['id'])
+        context['inmobiliaria'] = inmobiliaria
+
+        if 'success' in self.request.session:
+            context['success'] = self.request.session['success']
+            del self.request.session['success']
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(DetallesInmobiliaria, self).get_context_data(**kwargs)
+
+        inmobiliaria = Inmobiliaria.objects.get(id=kwargs['id'])
+        context['inmobiliaria'] = inmobiliaria
+
+        if 'aprobar_alta' in request.POST:
+            inmobiliaria.estado=True
+            inmobiliaria.create_schema()
+            dominio_inmobiliaria = Domain(
+                domain=inmobiliaria.schema_name+'.localhost',
+                is_primary=True,
+                tenant=inmobiliaria
+            )
+            dominio_inmobiliaria.save()
+
+            request.session['success'] = "Se ha aprobado la inmobiliaria exitosamente"
+
+        elif 'rechazar_alta' in request.POST:
+            request.session['success'] = "Se ha rechazado la inmobiliaria exitosamente"
+
+        inmobiliaria.fecha_revision=datetime.now()
+        inmobiliaria.save()
+
+        return render(request, self.template_name, context)
