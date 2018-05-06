@@ -1,0 +1,52 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %} Información de representante {% endblock title %}
+
+{% block titulo_contenido %}Detalles de {{representante}}{% endblock titulo_contenido %}
+{% block titulo_especifico %}Información de representante{% endblock titulo_especifico %}
+
+{% block contenido %}
+{% if success %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+  <strong>¡Éxito!</strong> {{success}}
+</div>
+{% endif %}
+<div class="table-responsive">
+  <table class="table table-hover jambo_table bulk_action">
+    <tbody>
+      <tr>
+        <td>Nombres y apellidos</td>
+        <td>{{representante}}</td>
+      </tr>
+      <tr>
+        <td>Cédula</td>
+        <td>{{representante.cedula}}</td>
+      </tr>
+      <tr>
+        <td>Correo</td>
+        <td>{{representante.correo}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr>
+{% if owner %}
+<form method="post">
+  {% csrf_token %}
+  <button class="btn btn-primary" name="actualizar-info" formmethod="post">Actualizar información</button>
+</form>
+{% endif %}
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+  </script>
+{% endblock javascripts %}
