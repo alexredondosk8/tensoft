@@ -27,12 +27,17 @@ urlpatterns_cuenta = [
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^login/$', Login.as_view(), name="login-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
+    url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
 ]
 
 urlpatterns_inmobiliarias = [
     url(r'^registrar/$', RegistrarInmobiliaria.as_view(), name="registrar-inmobiliaria"),
-    url(r'^pendientes-alta/$', InmobiliariasPendientesAprobacionAlta.as_view(), name="inmobiliarias-pendientes"),
-    url(r'^(?P<id>[\w.@+-]+)/$', DetallesInmobiliaria.as_view(), name="detalles-inmobiliaria")
+    url(r'^pendientes-alta/$', InmobiliariasPendientesAprobacionAlta.as_view(), name="inmobiliarias-pendientes-alta"),
+    url(r'^pendientes-baja/$', InmobiliariasPendientesAprobacionBaja.as_view(), name="inmobiliarias-pendientes-baja"),
+    url(r'^activas/$', login_required(InmobiliariasActivas.as_view()), name="inmobiliarias-activas"),
+    url(r'^inactivas/$', login_required(InmobiliariasInactivas.as_view()), name="inmobiliarias-inactivas"),
+    url(r'^(?P<id>[\w.@+-]+)/$', login_required(DetallesInmobiliaria.as_view()), name="detalles-inmobiliaria")
 ]
 
 urlpatterns_dev = [
