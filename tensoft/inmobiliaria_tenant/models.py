@@ -30,6 +30,7 @@ class Inmobiliaria(TenantMixin):
     fecha_registro = models.DateTimeField(default=datetime.now())
     fecha_revision = models.DateTimeField(null=True)
     solicitud_baja = models.BooleanField(default=False)
+    fecha_solicitud_baja = models.DateTimeField(null=True)
     fecha_baja = models.DateTimeField(null=True)
 
     auto_create_schema = False
@@ -43,7 +44,9 @@ class Inmobiliaria(TenantMixin):
         if self.estado == False and self.fecha_revision is not None:
             return "Rechazada"
         elif self.estado == False:
-            return "En espera de revisión"
+            return "En espera de aprobación"
+        elif self.estado == True and self.solicitud_baja == True:
+            return "En espera de aprobación de cierre"
         else:
             return "Activa"
 
@@ -62,7 +65,7 @@ class Inmobiliaria(TenantMixin):
             return 'Pendiente de aprobación de cierre'
         elif self.fecha_baja == None:
             return 'N/A'
-        elif self.fecha_baja is not None and solicitud_baja == True:
+        elif self.fecha_baja is not None and self.solicitud_baja == True:
             return self.fecha_baja
 
 
