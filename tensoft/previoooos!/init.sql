@@ -19,18 +19,13 @@
 -- CORRER ESTE SQL ANTES DE COMENZAR A DESARROLLAR
 
 -- CREAR UN SUPERUSUARIO POR MEDIO DE python3 manage.py createsuperuser
-
--- !!!! NUEVOOOO !!!!
--- CREAR UN GRUPO "superadministrador" (SIN COMILLAS) Y ASOCIARLO AL SUPERADMINISTRADOR CREADO
--- !!!! FIN DE NUEVO !!!!
-
-
 -- EL USUARIO Y CONTRASEÑA NO IMPORTAN. SON PARÁMETROS LOCALES
+
 -- INSERTANDO UN CLIENTE (EL SUPER USER SERÁ UN CLIENTE) NECESARIO PARA CREAR EL PRIMER TENANT QUE ES EL PÚBLICO;
 -- VERIFICAR EL ID DEL SUPERUSUARIO PARA LA COLUMNA USUARIO_ID
 
 insert into inmobiliaria_tenant_cliente ("nombre", "apellidos", "cedula", "correo", "estado", "usuario_id")
-values ('Supera dministrador', 'Inmobiliarias Tensoft', '1','admin@super.tf', True, 1);
+values ('Super administrador', 'Inmobiliarias Tensoft', '1','admin@super.tf', True, 1);
 
 -- INSERTANDO EL PRIMER TENANT (PÚBLICO)
 
@@ -41,3 +36,9 @@ values ('public', 'Superadmin', True, '1', now(), false);
 
 insert into inmobiliaria_tenant_domain ("domain", "is_primary", "tenant_id", "estado")
 values ('localhost', true, 1, true);
+
+-- !!!! NUEVOOOO !!!!
+-- INICIAR EL SERVIDOR python3 manage.py runserver
+-- ingresar a la URL localhost:8000/admin e iniciar sesión con el superusuario
+-- CREAR UN GRUPO "superadministrador" (SIN COMILLAS) Y ASOCIARLO AL SUPERADMINISTRADOR CREADO
+-- !!!! FIN DE NUEVO !!!!
