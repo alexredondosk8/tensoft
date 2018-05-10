@@ -16,32 +16,14 @@
   <strong>¡Éxito!</strong> {{success}}
 </div>
 {% endif %}
-<div class="table-responsive">
-  <table class="table table-hover jambo_table bulk_action">
-    <tbody>
-      <tr>
-        <td>Nombres y apellidos</td>
-        <td>{{representante}}</td>
-      </tr>
-      <tr>
-        <td>Cédula</td>
-        <td>{{representante.cedula}}</td>
-      </tr>
-      <tr>
-        <td>Correo</td>
-        <td>{{representante.correo}}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<hr>
-{% if owner %}
-  <a href="/cuenta/actualizar">
-    <button class="btn btn-primary" name="actualizar-info" formmethod="post">
-      Actualizar información
-    </button>
-  </a>
-{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <center>
+    <button class="btn btn-danger" name="cancelar">Cancelar</button>
+    <button class="btn btn-primary" name="actualizar">Guardar</button>
+  </center>
+</form>
 {% endblock contenido %}
 {% block javascripts %}
   {{ block.super }}
