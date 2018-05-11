@@ -21,9 +21,6 @@ class Cliente(models.Model):
         return self.nombre + " " + self.apellidos
 
 class Inmobiliaria(TenantMixin):
-
-    class Meta:
-        ordering = ['fecha_registro']
     nombre = models.CharField(max_length=100)
     representante = models.ForeignKey(Cliente)
     estado = models.BooleanField(default=False)
@@ -34,6 +31,9 @@ class Inmobiliaria(TenantMixin):
     fecha_baja = models.DateTimeField(null=True)
 
     auto_create_schema = False
+
+    class Meta:
+        ordering = ['fecha_registro']
 
     def __str__(self):
         return self.nombre
