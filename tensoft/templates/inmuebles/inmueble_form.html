@@ -1,0 +1,15 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <center>
+      <button class="btn btn-primary" formmethod="post" name="registrar">
+        Guardar
+      </button>
+    </center>
+  </form>
+{% endblock contenido %}

@@ -3,4 +3,6 @@ tensoft/tensoft/__pycache__
 tensoft/inmobiliaria_tenant/__pycache__
 tensoft/parreporter_tool/migrations
 tensoft/parreporter_tool/__pycache__
+tensoft/inmuebles/migrations
+tensoft/inmuebles/__pycache__
 media
