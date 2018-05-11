@@ -25,6 +25,7 @@ from django.conf.urls.static import static
 urlpatterns_cuenta = [
     url(r'^registrar/$', ClienteCreateView.as_view(), name="registrar-cliente"),
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
+    url(r'^actualizar/$', ClienteUpdateView.as_view(), name="actualizar-cliente"),
     url(r'^login/$', Login.as_view(), name="login-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
