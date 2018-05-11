@@ -5,4 +5,5 @@ tensoft/parreporter_tool/migrations
 tensoft/parreporter_tool/__pycache__
 tensoft/RegPropietarios/__pycache__
 tensoft/RegPropietarios/migrations
+.idea
 media
