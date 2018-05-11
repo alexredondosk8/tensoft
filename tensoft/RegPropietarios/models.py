@@ -9,3 +9,5 @@ from django.db import models
 class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
+    correo = models.CharField(max_length=254)
+    celular = models.CharField(max_length=10)

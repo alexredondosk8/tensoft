@@ -10,3 +10,11 @@ class FormRegistroCliente(forms.Form):
         'class': 'item form-control',
         'placeholder': 'Ingrese su(s) apellidos'
     }))
+    correo = forms.EmailField(label="Correo electrónico", widget=forms.TextInput(attrs={
+        'class': 'item form-control',
+        'placeholder':'Ingrese su correo electrónico'}))
+    celular = forms.CharField(label="Celular", widget=forms.TextInput(attrs={
+        'class': 'item form-control',
+        'placeholder': 'Ingrese su número de celular'}))
+    captcha = ReCaptchaField(label="Validación captcha", attrs={
+        'theme' : 'clean'})
