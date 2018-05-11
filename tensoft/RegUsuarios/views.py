@@ -29,12 +29,13 @@ class ClienteUsuario(TemplateView):
 
         form_cliente = FormRegistroCliente(request.POST)
 
-        datos = form_cliente.cleaned_data
-        nombre = datos['nombre']
-        apellidos = datos['apellidos']
-        correo = datos['correo']
-        telefono = datos['telefono']
-        celular = datos['celular']
+        if form_cliente.is_valid():
+            datos = form_cliente.cleaned_data
+            nombre = datos['nombre']
+            apellidos = datos['apellidos']
+            correo = datos['correo']
+            telefono = datos['telefono']
+            celular = datos['celular']
 
 # se definen los datos
 
@@ -48,3 +49,5 @@ class ClienteUsuario(TemplateView):
 
         cliente_registrado.save()
         request.session['correo'] = correo
+
+        return HttpResponseRedirect('/cuenta/registrar/usuario')
