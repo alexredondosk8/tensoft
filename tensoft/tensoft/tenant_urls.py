@@ -1,7 +1,12 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
-#from mensajes.views import MensajeCreateView
+from inmuebles.views import *
 
+
+url_inmuebles = [
+    url(r'^registrar$', InmueblesCreateView.as_view(), name="registrar-inmueble"),
+    url(r'^registrar/(?P<id_inmueble>[\w.@+-]+)/fotos/$', AgregarFotosInmueble.as_view(), name="registrar-fotos-inmueble"),
+]
 urlpatterns = [
-    url(r'^registrar-mensaje/', admin.site.urls),
+    url(r'^inmuebles/', include(url_inmuebles)),
 ]
