@@ -1,0 +1,72 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block title %} Lista de inmobiliarias {{tipo_lista}} {% endblock title %}
+
+{% block titulo_contenido %}Lista de inmobiliarias{% endblock titulo_contenido %}
+{% block titulo_especifico %}{{tipo_lista}}{% endblock titulo_especifico %}
+
+{% block contenido %}
+<div class="table-responsive">
+  <table id="datatable" class="table table-bordered table-striped bulk_action">
+    <thead>
+      <tr class="headings">
+        {% for campo in campos %}
+          {% if campo == 'Área' %}
+          <th>{{ campo }} (m<sup>2</sup>)</th>
+          {% else %}
+          <th>{{ campo }}</th>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for inmueble in lista_inmuebles %}
+      <tr>
+        <td>{{ inmueble.codigo }}</td>
+        <td>{{ inmueble.fecha_registro }}</td>
+        <td>{{ inmueble.area }}</td>
+        <td>{{ inmueble.barrio }}</td>
+        <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <!-- Datatables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#datatable').DataTable( {
+        "order": [[ 1, "asc" ]]
+      });
+    });
+  </script>
+{% endblock javascripts %}
