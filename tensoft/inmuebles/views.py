@@ -64,10 +64,12 @@ class ListarInmuebles(ListView):
     def get_context_data(self, **kwargs):
         context = super(ListarInmuebles, self).get_context_data(**kwargs)
 
-        lista_inmuebles = get_lista_inmuebles_activos(self.request.user)
+        estado = self.request.GET['estado']
+
+        lista_inmuebles = get_lista_inmuebles(self.request.user, estado)
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-        context['tipo_lista'] = 'Activos'
+        context['tipo_lista'] = estado
         context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
 
         context['lista_inmuebles'] = lista_inmuebles
