@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td>Dirección URL</td>
-        {% if inmobiliaria.get_estado == 'Activa' %}
+        {% if inmobiliaria.get_estado == 'Activa' or inmobiliaria.get_estado == 'En espera de aprobación de cierre' %}
           <td><a href="http://{{inmobiliaria.schema_name}}.localhost:8000" target="_blank">Visitar página</a></td>
         {% else %}
           <td>No disponible</td>
