@@ -5,4 +5,7 @@ tensoft/parreporter_tool/migrations
 tensoft/parreporter_tool/__pycache__
 tensoft/inmuebles/migrations
 tensoft/inmuebles/__pycache__
+tensoft/RegUsuarios/__pycache__
+tensoft/RegUsuarios/migrations
+.idea/*
 media

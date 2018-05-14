@@ -1,0 +1,42 @@
+{% extends "app/base_site.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Registro de usuarios</h3>
+      </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Formulario de inscripción <small>Formulario para la inscripción de usuarios</small></h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <br />
+            {% if existe %}
+              <p class="text-danger">
+                {{existe}} <a href="#"> ¿Olvidó su contraseña?</a>
+              </p>
+              {% endif %}
+            <form action="" method="POST" class="form-horizontal" enctype="multipart/form-data" id="cliente-form">{% csrf_token %}
+              {% bootstrap_form form  %}
+              <!--<div class="g-recaptcha" data-sitekey="6LcdV1MUAAAAAGc8ef38BPVtDsnwMqXKC7lNdlUX"></div>-->
+              <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block javascripts %}
+  {{ block.super }}
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock javascripts %}
