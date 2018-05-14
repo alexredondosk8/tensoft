@@ -1,7 +1,20 @@
-from django.conf.urls import include, url
+from django.conf.urls import url, include
 from django.contrib import admin
+from inmuebles.views import *
 from RegUsuarios.views import *
-#from mensajes.views import MensajeCreateView
+from propietarios.views import *
+
+
+url_inmuebles = [
+    url(r'^registrar/$', InmueblesCreateView.as_view(), name="registrar-inmueble"),
+    url(r'^registrar/(?P<id_inmueble>[\w.@+-]+)/fotos/$', AgregarFotosInmueble.as_view(), name="registrar-fotos-inmueble"),
+    url(r'^lista/$', ListarInmuebles.as_view(), name='listar-inmuebles'),
+    #url(r'^lista/(?P<estado>[\w.@+-]+)$', ListarInmuebles.as_view(), name='listar-inmuebles'),
+    url(r'^(?P<pk>[\w.@+-]+)/$', DetallesInmueble.as_view(), name='detalles-inmuebles'),
+]
+url_propietario = [
+    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
+]
 
 urlpatterns_cuenta = [
     url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
@@ -13,7 +26,13 @@ urlpatterns_cuenta = [
 ]
 
 urlpatterns = [
+<<<<<<< HEAD
     url(r'^$', Inicio.as_view(), name='inicio'),
     url(r'^cuenta/', include(urlpatterns_cuenta)),
     url(r'^registrar-mensaje/', admin.site.urls),
+=======
+    url(r'^inmuebles/', include(url_inmuebles)),
+    url(r'^registrar/$', ClienteUsuario.as_view(), name="registrar-usuario"),
+    url(r'^propietarios/', include(url_propietario)),
+>>>>>>> b8e256793383a38378ce78562daf4013af74c88c
 ]

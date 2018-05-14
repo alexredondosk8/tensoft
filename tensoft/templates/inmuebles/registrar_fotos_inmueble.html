@@ -1,0 +1,20 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %} Asociar imágenes a inmueble {% endblock title %}
+
+{% block titulo_contenido %}Código de inmueble {{ inmueble.codigo }}{% endblock titulo_contenido %}
+{% block titulo_especifico %}Registro de imágenes{% endblock titulo_especifico %}
+
+{% block contenido %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <center>
+      <button class="btn btn-primary" formmethod="post" name="registrar">
+        Guardar
+      </button>
+    </center>
+  </form>
+{% endblock contenido %}

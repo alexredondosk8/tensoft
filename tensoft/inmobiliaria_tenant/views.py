@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, render_to_response
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic import ListView
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
@@ -117,6 +117,41 @@ class UsuarioClienteCreateView(TemplateView):
             return render(request, self.template_name, context)
 
         return redirect("/cuenta/login/", request=request)
+
+class ClienteUpdateView(TemplateView):
+    template_name = "inmobiliaria_tenant/actualizar_cliente.html"
+    #form_class = FormUpdateCliente
+
+    def get_context_data(self, **kwargs):
+        context = super(ClienteUpdateView, self).get_context_data(**kwargs)
+
+        cliente = Cliente.objects.get(usuario=self.request.user)
+        context['cliente'] = cliente
+
+        form = FormUpdateCliente(instance=cliente)
+        context['form'] = form
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(ClienteUpdateView, self).get_context_data(**kwargs)
+        form = FormUpdateCliente(request.POST)
+        context['form'] = form
+
+        if form.is_valid():
+            nombre = form.cleaned_data['nombre']
+            apellidos = form.cleaned_data['apellidos']
+
+            cliente = Cliente.objects.get(usuario=self.request.user)
+            context['cliente'] = cliente
+
+            cliente.nombre = nombre
+            cliente.apellidos = apellidos
+            cliente.save()
+
+            context['success'] = "Los datos han sido actualizados correctamente"
+
+        return render(request, self.template_name, context)
 
 class Login(TemplateView):
     template_name = "login.html"
@@ -388,7 +423,7 @@ class DetallesInmobiliaria(TemplateView):
             inmobiliaria.solicitud_baja = False
             inmobiliaria.fecha_solicitud_baja = None
             inmobiliaria.save()
-            context['success']: "Se ha cancelado la solicitud de cierre exitosamente"
+            context['success']= "Se ha cancelado la solicitud de cierre exitosamente"
 
         elif 'ir_repre' in request.POST:
             url = reverse('cuenta-cliente', kwargs={'id_cliente': inmobiliaria.representante.cedula})
