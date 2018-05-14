@@ -53,6 +53,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'django.contrib.messages',
     'inmuebles',
     'propietarios',
+    'RegUsuarios',
 
     #'mensajes',
 )
@@ -159,6 +160,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+USE_THOUSAND_SEPARATOR = True
 
 
 # Static files (CSS, JavaScript, Images)
