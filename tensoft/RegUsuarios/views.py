@@ -116,6 +116,6 @@ class UsuarioClienteCreateView(TemplateView):
 
 class Login(TemplateView):
     template_name = "login.html"
-    
+
 class CuentaUsuario(TemplateView):
     template_name = "RegUsuarios/cuenta_cliente.html"

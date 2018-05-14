@@ -10,6 +10,9 @@ class FormRegistroCliente(forms.Form):
         'class': 'item form-control',
         'placeholder': 'Ingrese su(s) apellidos'
     }))
+    cedula = forms.CharField(label="Cédula", widget=forms.TextInput(attrs={
+        'class': 'item form-control',
+        'placeholder': 'Ingrese su número de identificación'}))
     correo = forms.EmailField(label="Correo electrónico", widget=forms.TextInput(attrs={
         'class': 'item form-control',
         'placeholder':'Ingrese su correo electrónico'}))
