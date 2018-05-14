@@ -2,6 +2,11 @@
 {% load bootstrap3 %}
 {% load staticfiles %}
 
+{% block title %} Asociar imágenes a inmueble {% endblock title %}
+
+{% block titulo_contenido %}Código de inmueble {{ inmueble.codigo }}{% endblock titulo_contenido %}
+{% block titulo_especifico %}Registro de imágenes{% endblock titulo_especifico %}
+
 {% block contenido %}
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
