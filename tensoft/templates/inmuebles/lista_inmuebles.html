@@ -22,11 +22,7 @@
     <thead>
       <tr class="headings">
         {% for campo in campos %}
-          {% if campo == 'Área' %}
-          <th>{{ campo }} (m<sup>2</sup>)</th>
-          {% else %}
           <th>{{ campo }}</th>
-          {% endif %}
         {% endfor %}
       </tr>
     </thead>
@@ -35,7 +31,7 @@
       <tr>
         <td>{{ inmueble.codigo }}</td>
         <td>{{ inmueble.fecha_registro }}</td>
-        <td>{{ inmueble.area }}</td>
+        <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
         <td>{{ inmueble.barrio }}</td>
         <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
       </tr>
