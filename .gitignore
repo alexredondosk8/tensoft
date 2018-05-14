@@ -7,4 +7,5 @@ tensoft/inmuebles/migrations
 tensoft/inmuebles/__pycache__
 tensoft/propietarios/migrations
 tensoft/propietarios/__pycache__
+.idea/*
 media
