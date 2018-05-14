@@ -423,7 +423,7 @@ class DetallesInmobiliaria(TemplateView):
             inmobiliaria.solicitud_baja = False
             inmobiliaria.fecha_solicitud_baja = None
             inmobiliaria.save()
-            context['success']: "Se ha cancelado la solicitud de cierre exitosamente"
+            context['success']= "Se ha cancelado la solicitud de cierre exitosamente"
 
         elif 'ir_repre' in request.POST:
             url = reverse('cuenta-cliente', kwargs={'id_cliente': inmobiliaria.representante.cedula})

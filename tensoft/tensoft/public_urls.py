@@ -20,7 +20,10 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from inmobiliaria_tenant.views import *
 from parreporter_tool.views import *
+
 from django.conf.urls.static import static
+
+#from tensoft.inmobiliaria_tenant.views import RegistrarInmobiliaria
 
 urlpatterns_cuenta = [
     url(r'^registrar/$', ClienteCreateView.as_view(), name="registrar-cliente"),
