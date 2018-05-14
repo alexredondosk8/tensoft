@@ -52,6 +52,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'django.contrib.auth',
     'django.contrib.messages',
     'inmuebles',
+    'propietarios',
     'RegUsuarios',
 
     #'mensajes',
