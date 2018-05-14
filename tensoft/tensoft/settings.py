@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
+modified
 """
 
 import os
@@ -51,6 +52,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'django.contrib.auth',
     'django.contrib.messages',
     'inmuebles',
+    'RegUsuarios',
 
     #'mensajes',
 )

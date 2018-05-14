@@ -1,7 +1,8 @@
+
 from django.conf.urls import url, include
 from django.contrib import admin
 from inmuebles.views import *
-
+from RegUsuarios.views import *
 
 url_inmuebles = [
     url(r'^registrar/$', InmueblesCreateView.as_view(), name="registrar-inmueble"),
@@ -12,4 +13,6 @@ url_inmuebles = [
 ]
 urlpatterns = [
     url(r'^inmuebles/', include(url_inmuebles)),
+    url(r'^registrar/$', ClienteUsuario.as_view(), name="registrar-usuario"),
+
 ]
