@@ -1,0 +1,56 @@
+{% extends "app/base_site.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Registro de clientes</h3>
+      </div>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Formulario de inscripción <small>Formulario para la inscripción de clientes</small></h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <br />
+            {% if no_match %}
+            <p class="text-danger">
+              {{no_match}}
+            </p>
+            {% endif %}
+            <form action="" method="POST" data-parsley-validate class="form-horizontal" enctype="multipart/form-data" id="usuario-form">
+              {% csrf_token %}
+              <div class="item form-group">
+                <label class="control-label col-md-3" for="id_user">Usuario</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="id_correo" class="form-control" name="correo" type="text" value="{{cliente.correo}}"
+                  disabled="disabled">
+                </div>
+              </div>
+              <div class="item form-group">
+                <label for="password" class="control-label col-md-3">Ingrese una contraseña</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="password" type="password" name="password" class="form-control col-md-7 col-xs-12" required="required" data-parsley-minlength="8" data-parsley-maxlength="20" data-parsley-equalto="#password2">
+                </div>
+              </div>
+              <div class="item form-group">
+                <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repita la contraseña</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <input id="password2" type="password" name="password2" class="form-control col-md-7 col-xs-12" required="required" data-parsley-equalto="#password">
+                </div>
+              </div>
+              <center> {% bootstrap_button "Guardar" button_type="submit" button_class="btn-primary"%}</center>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
