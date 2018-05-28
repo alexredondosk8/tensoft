@@ -1,4 +1,5 @@
 from django import forms
+from .models import *
 from captcha.fields import ReCaptchaField
 
 class FormRegistroCliente(forms.Form):
@@ -24,3 +25,9 @@ class FormRegistroCliente(forms.Form):
         'placeholder': 'Ingrese su número de celular'}))
     captcha = ReCaptchaField(label="Validación captcha", attrs={
         'theme' : 'clean'})
+
+class FormUpdateCliente(forms.ModelForm):
+
+    class Meta:
+        model = Usuario
+        fields = ['nombre', 'apellidos']

@@ -16,7 +16,7 @@ url_propietario = [
     url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
 ]
 
-urlpatterns_cuenta = [
+url_cuenta = [
     url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
     # url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     # url(r'^login/$', Login.as_view(), name="login-cliente"),
@@ -26,13 +26,9 @@ urlpatterns_cuenta = [
 ]
 
 urlpatterns = [
-<<<<<<< HEAD
     url(r'^$', Inicio.as_view(), name='inicio'),
-    url(r'^cuenta/', include(urlpatterns_cuenta)),
+    url(r'^cuenta/', include(url_cuenta)),
     url(r'^registrar-mensaje/', admin.site.urls),
-=======
     url(r'^inmuebles/', include(url_inmuebles)),
-    url(r'^registrar/$', ClienteUsuario.as_view(), name="registrar-usuario"),
     url(r'^propietarios/', include(url_propietario)),
->>>>>>> b8e256793383a38378ce78562daf4013af74c88c
 ]

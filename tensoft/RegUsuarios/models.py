@@ -1,6 +1,11 @@
-from django.db import models
+from django.db import models, connection
+from django.core.management import call_command
 from django.contrib.auth.models import User
 from datetime import datetime
+from django_tenants.models import TenantMixin, DomainMixin
+from tenant_schemas.utils import get_public_schema_name, schema_exists
+
+from tenant_schemas.postgresql_backend.base import _check_schema_name
 
 # Gestión de clientes (Dueños de casa, Apartamento o Locales)
 # - Registrar clientes (los clientes deben poder poder crear su propia cuenta
@@ -15,8 +20,7 @@ class Usuario(models.Model):
     correo = models.EmailField(max_length=254)
     telefono = models.CharField(max_length=7)
     celular = models.CharField(max_length=10)
-    usuario = models.ForeignKey(User, null=True)
-    estado = models.BooleanField(default=True)
+    
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
