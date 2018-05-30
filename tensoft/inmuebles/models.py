@@ -5,7 +5,7 @@ import os
 # from propietarios.models import propietario
 
 def generate_upload(instance, filename):
-    return os.path.join(settings.MEDIA_ROOT+"/inmuebles/"+str(instance.codigo.codigo)+"/"+filename)
+    return "inmuebles/"+str(instance.codigo.codigo)+"/"+filename
 
 # Create your models here.
 class Inmueble(models.Model):
@@ -34,9 +34,9 @@ class Inmueble(models.Model):
     )
 
     opt_estado_operacional = (
-        (1, 'Disponible'),
-        (2, 'Ocupado'),
-        (3, 'No disponible')
+        (1, 'Disponible'), # se muestra el inmueble a clientes
+        (2, 'Ocupado'),     # no se muestra el inmueble a clientes porque alguien lo alquiló o compró
+        (3, 'No disponible')# no se muestra el inmueble a clientes por otros motivos
     )
     codigo = models.AutoField(primary_key=True)
     tipo_inmueble = models.IntegerField(choices=opt_tipo_inmueble)
