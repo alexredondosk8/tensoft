@@ -79,3 +79,11 @@ class ListarInmuebles(ListView):
 class DetallesInmueble(DetailView):
 
     model = Inmueble
+
+    def get_context_data(self, **kwargs):
+        context = super(DetallesInmueble, self).get_context_data(**kwargs)
+
+        imagenes = FotosInmueble.objects.filter(codigo=kwargs['object'].codigo)
+        context['imagenes'] = imagenes
+
+        return context
