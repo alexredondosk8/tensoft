@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, render_to_response
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, CreateView
@@ -59,7 +60,7 @@ class UsuarioCreateView(TemplateView):
                     celular=celular
                 )
                 cliente_registrado.save()
-                request.session['correo'] = correo
+                request.session['cedula'] = cedula
 
                 return HttpResponseRedirect('/cuenta/registrar/usuario')
         else:
@@ -74,8 +75,8 @@ class UsuarioClienteCreateView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UsuarioClienteCreateView, self).get_context_data(**kwargs)
 
-        if self.request.session.get('correo'):
-            cliente = Usuario.objects.get(cedula=self.request.session.get('correo'))
+        if self.request.session.get('cedula'):
+            cliente = Usuario.objects.get(cedula=self.request.session.get('cedula'))
             context['cliente'] = cliente
 
         else:
@@ -88,6 +89,7 @@ class UsuarioClienteCreateView(TemplateView):
         if request.POST['password'] and request.POST['password2']:
             if request.POST['password'] == request.POST['password2']:
                 password = request.POST['password']
+                cliente = Usuario.objects.get(cedula=request.session['cedula'])
                 correo = cliente.correo
                 nuevo_usuario = User.objects.create_user(username=correo, password=password)
                 nuevo_usuario.save()
@@ -99,11 +101,11 @@ class UsuarioClienteCreateView(TemplateView):
                     grupo.user_set.add(nuevo_usuario)
                 except:
                     grupo = Group()
-                    grupo.name = 'usuario-inmobiliaria'
+                    grupo.name = 'usuario-cliente'
                     grupo.save()
                     grupo.user_set.add(nuevo_usuario)
 
-                del request.session['correo']
+                del request.session['cedula']
                 request.session['nuevo-registro'] = "Usted se ha registrado exitosamente. Por favor inicie sesión para continuar"
 
             else:
@@ -116,6 +118,32 @@ class UsuarioClienteCreateView(TemplateView):
 
 class Login(TemplateView):
     template_name = "login.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Login, self).get_context_data(**kwargs)
+        print(kwargs)
+        registro_exitoso =  self.request.session.get('nuevo-registro')
+        if registro_exitoso:
+            context['registro'] = registro_exitoso
+            del self.request.session['nuevo-registro']
+        else:
+            print("nada en la session para mostrar")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(Login, self).get_context_data(**kwargs)
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        print (context)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect('/')
+        else:
+            context['no_usuario'] = 'Usuario o contraseña inválidos'
+        return render(request, self.template_name, context)
 
 class CuentaUsuario(TemplateView):
     template_name = "RegUsuarios/cuenta_cliente.html"

@@ -1,4 +1,4 @@
-from django.db import models, connection
+from django.db import models, connection, IntegrityError
 from django.core.management import call_command
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -20,7 +20,6 @@ class Usuario(models.Model):
     correo = models.EmailField(max_length=254)
     telefono = models.CharField(max_length=7)
     celular = models.CharField(max_length=10)
-    
 
     def __str__(self):
         return self.nombre + " " + self.apellidos
