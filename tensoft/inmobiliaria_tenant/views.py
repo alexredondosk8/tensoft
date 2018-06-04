@@ -39,6 +39,8 @@ class ClienteCreateView(TemplateView):
             apellidos = datos['apellidos']
             cedula = datos['cedula']
             correo = datos['correo']
+            sexo = datos['sexo']
+            fecha_nacimiento = datos['fecha_nacimiento']
 
             # VALIDA QUE EL CORREO NO ESTÉ REGISTRADO EN LA BD
             try:
@@ -52,7 +54,9 @@ class ClienteCreateView(TemplateView):
                     nombre=nombre,
                     apellidos=apellidos,
                     cedula=cedula,
-                    correo=correo
+                    correo=correo,
+                    fecha_nacimiento=fecha_nacimiento,
+                    sexo=sexo
                 )
 
                 cliente_registrado.save()
@@ -223,6 +227,7 @@ class RegistrarInmobiliaria(TemplateView):
     def post(self, request, *args, **kwargs):
         context = super(RegistrarInmobiliaria, self).get_context_data(**kwargs)
         nombre_inmobiliaria = request.POST['nombre']
+        direccion = request.POST['direccion']
 
         if nombre_inmobiliaria:
             if " " in nombre_inmobiliaria:
@@ -232,6 +237,7 @@ class RegistrarInmobiliaria(TemplateView):
             else:
                 inmobiliaria = Inmobiliaria(
                     nombre = nombre_inmobiliaria,
+                    direccion = direccion,
                     representante = Cliente.objects.get(usuario=request.user),
                     schema_name = procesar_schema_name(nombre_inmobiliaria).lower()
                 )
@@ -348,6 +354,31 @@ class InmobiliariasInactivas(ListView):
 
         return context
 
+class InmobiliariasRechazadas(ListView):
+    model = Inmobiliaria
+    template_name = "inmobiliaria_tenant/lista_inmobiliarias.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(InmobiliariasRechazadas, self).get_context_data(**kwargs)
+
+        if self.request.user.is_superuser or self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+            lista_inmobiliarias = lista_inmobiliarias_rechazadas(self.request.user)
+            paginator = Paginator(lista_inmobiliarias, self.paginate_by)
+
+            context['tipo_lista'] = 'Rechazadas'
+
+            if self.request.user.is_superuser:
+                context['campos'] = ['Nombre', 'Fecha de rechazo', 'Fecha de registro', 'Representante']
+            elif self.request.user.groups.filter(name='cliente-inmobiliaria').exists():
+                context['campos'] = ['Nombre', 'Fecha de rechazo', 'Fecha de registro']
+            context['lista_rechazadas'] = lista_inmobiliarias
+        else:
+            raise PermissionDenied
+
+        return context
+
+
 class DetallesInmobiliaria(TemplateView):
     template_name = "inmobiliaria_tenant/detalles_inmobiliaria.html"
 
@@ -397,6 +428,7 @@ class DetallesInmobiliaria(TemplateView):
 
         elif 'rechazar_alta' in request.POST:
             inmobiliaria.fecha_revision=datetime.now()
+            inmobiliaria.fecha_revision_rechazo = datetime.now()
             inmobiliaria.save()
 
             request.session['success'] = "Se ha rechazado la inmobiliaria exitosamente"

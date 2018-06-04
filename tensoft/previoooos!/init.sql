@@ -24,8 +24,12 @@
 -- INSERTANDO UN CLIENTE (EL SUPER USER SERÁ UN CLIENTE) NECESARIO PARA CREAR EL PRIMER TENANT QUE ES EL PÚBLICO;
 -- VERIFICAR EL ID DEL SUPERUSUARIO PARA LA COLUMNA USUARIO_ID
 
-insert into inmobiliaria_tenant_cliente ("nombre", "apellidos", "cedula", "correo", "estado", "usuario_id")
-values ('Super administrador', 'Inmobiliarias Tensoft', '1','admin@super.tf', True, 1);
+insert into auth_group ("name") values ('superadministrador');
+
+insert into auth_user_groups ("user_id", "group_id") values (1, 1);
+
+insert into inmobiliaria_tenant_cliente ("nombre", "apellidos", "cedula", "fecha_nacimiento","sexo", "correo", "estado", "usuario_id")
+values ('Super administrador', 'Inmobiliarias Tensoft', '1', '2018-01-01', 1,'admin@super.tf', True, 1);
 
 -- INSERTANDO EL PRIMER TENANT (PÚBLICO)
 

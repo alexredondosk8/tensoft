@@ -9,5 +9,7 @@ tensoft/RegUsuarios/__pycache__
 tensoft/RegUsuarios/migrations
 tensoft/propietarios/migrations
 tensoft/propietarios/__pycache__
+tensoft/reportes/migrations
+tensoft/reportes/__pycache__
 .idea/*
 media
