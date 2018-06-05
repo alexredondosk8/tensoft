@@ -14,6 +14,7 @@ url_inmuebles = [
     url(r'^lista/$', ListarInmuebles.as_view(), name='listar-inmuebles'),
     #url(r'^lista/(?P<estado>[\w.@+-]+)$', ListarInmuebles.as_view(), name='listar-inmuebles'),
     url(r'^(?P<pk>[\w.@+-]+)/$', DetallesInmueble.as_view(), name='detalles-inmueble'),
+    url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarInmueble.as_view(), name='actualizar-inmueble'),
 ]
 
 url_propietario = [

@@ -100,3 +100,38 @@ class DetallesInmueble(DetailView):
         context['imagenes'] = imagenes
 
         return context
+
+class ActualizarInmueble(UpdateView):
+    model = Inmueble
+    fields = [
+        'tipo_inmueble',
+        'tipo_transaccion',
+        'tipo_moneda',
+        'valor',
+        'area',
+        'numero_baños',
+        'numero_habitaciones',
+        'parqueadero',
+        'tipo_parqueadero',
+        'parqueadero_visitantes',
+        'barrio',
+        'direccion',
+        'municipio',
+        'estrato',
+        'descripcion'
+    ]
+    template_name = "inmuebles/actualizar_inmueble.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ActualizarInmueble, self).get_context_data(**kwargs)
+        context['municipios'] = get_municipios_dpto()
+        context['municipio_inmueble'] = get_municipio_inmueble(Inmueble.objects.get(codigo=context['inmueble'].codigo))
+        print(context['municipio_inmueble'].id_municipio)
+        return context
+
+    def form_valid(self, form):
+        print(self.request.POST)
+        """form.instance.created_by = self.request.user"""
+        messages.add_message(self.request, messages.SUCCESS, 'Se actualizó la información del inmueble'
+            ' exitosamente')
+        return super().form_valid(form)

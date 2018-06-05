@@ -127,6 +127,9 @@ class Inmueble(models.Model):
         else:
             return 'No disponible'
 
+    def get_absolute_url(self):
+        return "/inmuebles/" + str(self.codigo) + "/"
+
 class FotosInmueble(models.Model):
     id = models.AutoField(primary_key=True)
     codigo = models.ForeignKey(Inmueble, on_delete=models.CASCADE, related_name='images')

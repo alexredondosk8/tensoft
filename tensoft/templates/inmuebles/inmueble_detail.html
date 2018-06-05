@@ -8,7 +8,7 @@
 {% endblock title %}
 
 {% block titulo_contenido %}
-  Inmueble en barrio {{ inmueble.barrio }}
+  Inmueble en barrio {{ inmueble.barrio }} de {{ inmueble.municipio }}
 {% endblock titulo_contenido %}
 
 {% block titulo_especifico %}
@@ -114,7 +114,9 @@
 
   <div class="col-md-5 col-sm-5 col-xs-12" style="border:0px solid #e5e5e5;">
 
-    <h3 class="prod_title">{{ inmueble.get_tipo_inmueble }} en barrio {{ inmueble.barrio }}</h3>
+    <h3 class="prod_title">{{ inmueble.get_tipo_inmueble }} en barrio {{ inmueble.barrio }} de
+      {{ inmueble.municipio }}
+    </h3>
 
     <p>{{ inmueble.descripcion }}.</p>
     <br />
@@ -230,6 +232,10 @@
                 <tr>
                   <td><strong>Barrio</strong></td>
                   <td>{{ object.barrio }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Municipio</strong></td>
+                  <td>{{ object.municipio }}</td>
                 </tr>
                 <tr>
                   <td><strong>Estrato socioeconómico</strong></td>

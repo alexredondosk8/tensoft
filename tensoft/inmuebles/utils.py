@@ -43,3 +43,6 @@ def get_municipios_dpto():
         lista_tuplas.append((municipio.id_municipio, municipio.nombre + " / " + departamento.nombre))
 
     return lista_tuplas
+
+def get_municipio_inmueble(inmueble):
+    return Municipio.objects.get(id_municipio=inmueble.municipio.id_municipio)
