@@ -40,9 +40,3 @@ values ('public', 'Superadmin', True, '1', now(), false);
 
 insert into inmobiliaria_tenant_domain ("domain", "is_primary", "tenant_id", "estado")
 values ('localhost', true, 1, true);
-
--- !!!! NUEVOOOO !!!!
--- INICIAR EL SERVIDOR python3 manage.py runserver
--- ingresar a la URL localhost:8000/admin e iniciar sesión con el superusuario
--- CREAR UN GRUPO "superadministrador" (SIN COMILLAS) Y ASOCIARLO AL SUPERADMINISTRADOR CREADO
--- !!!! FIN DE NUEVO !!!!

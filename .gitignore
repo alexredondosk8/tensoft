@@ -11,5 +11,7 @@ tensoft/propietarios/migrations
 tensoft/propietarios/__pycache__
 tensoft/reportes/migrations
 tensoft/reportes/__pycache__
+tensoft/acciones_previas/script_insert_dep_mun.sql
+tensoft/acciones_previas/procesar.py
 .idea/*
 media

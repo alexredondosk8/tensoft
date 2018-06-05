@@ -13,6 +13,7 @@ from datetime import datetime
 from .models import Cliente, Inmobiliaria, Domain
 from .forms import *
 from .utils import *
+from inmuebles.utils import insertar_departamentos_municipios
 
 # Create your views here.
 class Inicio(TemplateView):
@@ -421,6 +422,8 @@ class DetallesInmobiliaria(TemplateView):
             dominio_inmobiliaria.save()
             inmobiliaria.fecha_revision=datetime.now()
             inmobiliaria.save()
+
+            insertar_departamentos_municipios(inmobiliaria.schema_name)
 
             request.session['success'] = "Se ha aprobado la inmobiliaria exitosamente"
             context['success'] = request.session['success']
