@@ -1,0 +1,52 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_field form.tipo_inmueble %}
+    {% bootstrap_field form.tipo_transaccion %}
+    {% bootstrap_field form.tipo_moneda %}
+    {% bootstrap_field form.valor %}
+    {% bootstrap_label "Área(m2)" label_for="area" %}
+    {% bootstrap_field form.area show_label=False %}
+    {% bootstrap_field form.numero_baños %}
+    {% bootstrap_field form.numero_habitaciones %}
+    {% bootstrap_field form.parqueadero %}
+    {% bootstrap_field form.tipo_parqueadero %}
+    {% bootstrap_field form.parqueadero_visitantes %}
+    {% bootstrap_field form.direccion %}
+    {% bootstrap_field form.barrio %}
+    <div class="form-group">
+      <label class="control-label" for="id_municipio">Municipio</label>
+      <select class="form-control" name="municipio" id="id_municipio" title="" required="">
+        {% for municipio in municipios %}
+          {% if municipio.0 == municipio_inmueble.id_municipio %}
+            <option value="{{ municipio.0 }}" selected>{{ municipio.1 }}</option>
+          {% else %}
+            <option value="{{ municipio.0 }}">{{ municipio.1 }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <!--{% bootstrap_field form.municipio %}<!---->
+    {% bootstrap_field form.estrato %}
+    {% bootstrap_field form.descripcion %}
+    <center>
+      <button class="btn btn-primary" formmethod="post" name="registrar">
+        Guardar
+      </button>
+    </center>
+  </form>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <!--<script type="text/javascript">
+  $(document).on("change","select",function(){
+    $("option[value=" + this.value + "]", this)
+    .attr("selected", true).siblings()
+    .removeAttr("selected")
+    });
+  </script>-->
+{% endblock javascripts %}
