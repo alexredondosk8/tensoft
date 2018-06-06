@@ -45,6 +45,7 @@ SHARED_APPS = (
     'bootstrap3',
     'captcha',
     'parreporter_tool',
+    'reportes'
 
 )
 

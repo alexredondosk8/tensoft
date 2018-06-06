@@ -32,7 +32,7 @@ class Cliente(models.Model):
 class Inmobiliaria(TenantMixin):
     nombre = models.CharField(max_length=100)
     representante = models.ForeignKey(Cliente)
-    direccion = models.CharField(max_length=100, blank=True)
+    direccion = models.CharField(max_length=100, blank=True, null=True)
     estado = models.BooleanField(default=False)
     fecha_registro = models.DateTimeField(default=datetime.now())
     fecha_revision = models.DateTimeField(null=True)

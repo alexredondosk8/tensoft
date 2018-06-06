@@ -72,8 +72,8 @@ class Inmueble(models.Model):
     descripcion = models.TextField(max_length=1000)
     fecha_registro = models.DateTimeField(default=datetime.now())
     estado_operacional = models.IntegerField(choices=opt_estado_operacional, default=1)
-    #propietario = models.ForeignKey('propietario')
-    #arrendatario = models.ForeignKey('usuario', null=True)
+    propietario = models.ForeignKey('propietarios.Propietario', null=True)
+    #arrendatario = models.ForeignKey('RegUsuarios.Usuario', null=True)
 
     def get_tipo_inmueble(self):
         if self.tipo_inmueble == 1:
