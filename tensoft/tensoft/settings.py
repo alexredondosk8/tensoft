@@ -45,6 +45,8 @@ SHARED_APPS = (
     'bootstrap3',
     'captcha',
     'parreporter_tool',
+    'reportes'
+
 )
 
 TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
@@ -54,6 +56,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'inmuebles',
     'propietarios',
     'RegUsuarios',
+    'django.contrib.humanize'
 
     #'mensajes',
 )
@@ -65,6 +68,8 @@ TENANT_DOMAIN_MODEL = "inmobiliaria_tenant.Domain"
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcdV1MUAAAAAHM8NjfYANxwvPYotHr_zz-wlmDi'
 NOCAPTCHA = True
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 MIDDLEWARE_CLASSES = [
     'django_tenants.middleware.TenantMiddleware',
@@ -161,7 +166,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-USE_THOUSAND_SEPARATOR = True
+USE_THOUSAND_SEPARATOR = False
 
 
 # Static files (CSS, JavaScript, Images)

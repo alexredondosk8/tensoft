@@ -8,6 +8,21 @@ def generate_upload(instance, filename):
     return "inmuebles/"+str(instance.codigo.codigo)+"/"+filename
 
 # Create your models here.
+class Departamento(models.Model):
+    id_departamento = models.IntegerField(primary_key=True)
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+
+class Municipio(models.Model):
+    id_municipio = models.IntegerField(primary_key=True)
+    nombre = models.CharField(max_length=200)
+    departamento = models.ForeignKey(Departamento)
+
+    def __str__(self):
+        return self.nombre
+
 class Inmueble(models.Model):
     opt_tipo_inmueble = (
         (1, 'Casa'),
@@ -52,12 +67,13 @@ class Inmueble(models.Model):
     estrato = models.IntegerField()
     barrio = models.CharField(max_length=45)
     direccion = models.CharField(max_length=80)
+    municipio = models.ForeignKey(Municipio, null=True)
     estado = models.BooleanField(default=True)
     descripcion = models.TextField(max_length=1000)
     fecha_registro = models.DateTimeField(default=datetime.now())
     estado_operacional = models.IntegerField(choices=opt_estado_operacional, default=1)
-    #propietario = models.ForeignKey('propietario')
-    #arrendatario = models.ForeignKey('usuario', null=True)
+    propietario = models.ForeignKey('propietarios.Propietario', null=True)
+    #arrendatario = models.ForeignKey('RegUsuarios.Usuario', null=True)
 
     def get_tipo_inmueble(self):
         if self.tipo_inmueble == 1:
@@ -110,6 +126,9 @@ class Inmueble(models.Model):
             return 'Ocupado'
         else:
             return 'No disponible'
+
+    def get_absolute_url(self):
+        return "/inmuebles/" + str(self.codigo) + "/"
 
 class FotosInmueble(models.Model):
     id = models.AutoField(primary_key=True)
