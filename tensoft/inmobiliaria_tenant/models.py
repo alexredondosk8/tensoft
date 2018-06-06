@@ -10,8 +10,17 @@ from tenant_schemas.postgresql_backend.base import _check_schema_name
 # Create your models here.
 
 class Cliente(models.Model):
+
+    opt_sexo = (
+        (1, 'Femenino'),
+        (2, 'Masculino')
+    )
+
     nombre = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
+    fecha_nacimiento = models.DateTimeField()
+    edad = models.IntegerField(null=True)
+    sexo = models.IntegerField(choices=opt_sexo)
     cedula = models.CharField(max_length=20, primary_key=True)
     correo = models.EmailField(max_length=254)
     usuario = models.ForeignKey(User, null=True)
@@ -23,9 +32,11 @@ class Cliente(models.Model):
 class Inmobiliaria(TenantMixin):
     nombre = models.CharField(max_length=100)
     representante = models.ForeignKey(Cliente)
+    direccion = models.CharField(max_length=100, blank=True, null=True)
     estado = models.BooleanField(default=False)
     fecha_registro = models.DateTimeField(default=datetime.now())
     fecha_revision = models.DateTimeField(null=True)
+    fecha_revision_rechazo = models.DateTimeField(null=True)
     solicitud_baja = models.BooleanField(default=False)
     fecha_solicitud_baja = models.DateTimeField(null=True)
     fecha_baja = models.DateTimeField(null=True)
