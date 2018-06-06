@@ -20,6 +20,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from inmobiliaria_tenant.views import *
 from parreporter_tool.views import *
+from reportes.views import *
 
 from django.conf.urls.static import static
 
@@ -41,6 +42,7 @@ urlpatterns_inmobiliarias = [
     url(r'^pendientes-baja/$', InmobiliariasPendientesAprobacionBaja.as_view(), name="inmobiliarias-pendientes-baja"),
     url(r'^activas/$', login_required(InmobiliariasActivas.as_view()), name="inmobiliarias-activas"),
     url(r'^inactivas/$', login_required(InmobiliariasInactivas.as_view()), name="inmobiliarias-inactivas"),
+    url(r'^rechazadas/$', login_required(InmobiliariasRechazadas.as_view()), name="inmobiliarias-rechazadas"),
     url(r'^(?P<id>[\w.@+-]+)/$', login_required(DetallesInmobiliaria.as_view()), name="detalles-inmobiliaria")
 ]
 
@@ -50,10 +52,16 @@ urlpatterns_dev = [
     #url(r'^reportar/$', CerrarProblema.as_view(), name="cerrar-problema")
 ]
 
+urlpatterns_reportes = [
+    url(r'^sexo-clientes/', ReporteSexoClientesRegistrados.as_view(), name="reporte-sexo-clientes"),
+    url(r'^edad-clientes/', ReporteEdadClientesRegistrados.as_view(), name="reporte-edad-clientes"),
+]
+
 urlpatterns = [
     url(r'^$', Inicio.as_view(), name='inicio'),
     url(r'^admin/', admin.site.urls),
     url(r'^cuenta/', include(urlpatterns_cuenta)),
     url(r'^inmobiliarias/', include(urlpatterns_inmobiliarias)),
+    url(r'^reportes/', include(urlpatterns_reportes)),
     url(r'^dev/', include(urlpatterns_dev)),
 ] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
