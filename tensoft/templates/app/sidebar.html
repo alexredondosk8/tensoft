@@ -52,6 +52,12 @@
             <li><a href="/inmobiliarias/rechazadas/"> Rechazadas</a></li>
           </ul>
         </li>
+        <li><a><i class="fa fa-bar-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/reportes/sexo-clientes/"> Clientes por sexo</a></li>
+            <li><a href="/reportes/edad-clientes/"> Clientes por rango de edad</a></li>
+          </ul>
+        </li>
         {% elif request.user.groups.all.0.name == "cliente-inmobiliaria" %}
         <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">

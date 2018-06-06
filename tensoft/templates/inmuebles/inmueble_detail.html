@@ -1,13 +1,14 @@
 {% extends "app/plain_page.html" %}
 {% load bootstrap3 %}
 {% load staticfiles %}
+{% load humanize %}
 
 {% block title %}
   Inmueble código {{ inmueble.codigo }}
 {% endblock title %}
 
 {% block titulo_contenido %}
-  Inmueble en barrio {{ inmueble.barrio }}
+  Inmueble en barrio {{ inmueble.barrio }} de {{ inmueble.municipio }}
 {% endblock titulo_contenido %}
 
 {% block titulo_especifico %}
@@ -88,6 +89,16 @@
     </table>
   </div>
   {% else %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+        <strong>¡Éxito!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
   <div class="col-md-7 col-sm-7 col-xs-12">
     <div class="product-image">
       <img id="id-main-image" src="{{ imagenes.0.imagen.url }}" alt="..." />
@@ -103,7 +114,9 @@
 
   <div class="col-md-5 col-sm-5 col-xs-12" style="border:0px solid #e5e5e5;">
 
-    <h3 class="prod_title">{{ inmueble.get_tipo_inmueble }} en barrio {{ inmueble.barrio }}</h3>
+    <h3 class="prod_title">{{ inmueble.get_tipo_inmueble }} en barrio {{ inmueble.barrio }} de
+      {{ inmueble.municipio }}
+    </h3>
 
     <p>{{ inmueble.descripcion }}.</p>
     <br />
@@ -131,7 +144,7 @@
     <div class="">
       <div class="product_price">
         <span class="price-tax">Tipo de transacción: {{ inmueble.get_tipo_transaccion }}</span>
-        <h1 class="price">{{ inmueble.valor | floatformat:2 }} {{ inmueble.get_tipo_moneda }}</h1>
+        <h1 class="price">{{ inmueble.valor | floatformat:2 | intcomma }} {{ inmueble.get_tipo_moneda }}</h1>
         <br>
       </div>
     </div>
@@ -186,7 +199,7 @@
                 </tr>
                 <tr>
                   <td><strong>Valor</strong></td>
-                  <td>{{ object.valor  | floatformat:2 }}</td>
+                  <td>{{ object.valor  | floatformat:2 | intcomma }}</td>
                 </tr>
                 <tr>
                   <td><strong>Área</strong></td>
@@ -219,6 +232,10 @@
                 <tr>
                   <td><strong>Barrio</strong></td>
                   <td>{{ object.barrio }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Municipio</strong></td>
+                  <td>{{ object.municipio }}</td>
                 </tr>
                 <tr>
                   <td><strong>Estrato socioeconómico</strong></td>
@@ -271,6 +288,11 @@
       //record which thumb was clicked
       //$("#book-list li").removeClass("active"); //remove class
       //$(this).addClass("active"); //apply class to selected thumb
+    });
+  </script>
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
     });
   </script>
 {% endblock javascripts %}
