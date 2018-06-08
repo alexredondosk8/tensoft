@@ -6,6 +6,7 @@ from inmuebles.views import *
 from RegUsuarios.views import *
 from propietarios.views import *
 from tensoft.settings import *
+from reportes.views import *
 
 url_inmuebles = [
     url(r'^registrar/$', InmueblesCreateView.as_view(success_url="/inmuebles/lista/?estado=1"), name="registrar-inmueble"),
@@ -22,10 +23,16 @@ url_propietario = [
     url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
 ]
 
+url_reportes = [
+    url(r'^lista-inmuebles/(?P<formato>(html|pdf))/(?P<id>[\w.@+-]+)/$', ReporteListaInmuebles.as_view(),
+        name='reporte-lista-inmuebles'),
+]
+
 urlpatterns = [
     url(r'^inmuebles/', include(url_inmuebles)),
     url(r'^registrar/$', ClienteUsuario.as_view(), name="registrar-usuario"),
     url(r'^propietarios/', include(url_propietario)),
+    url(r'^reportes/', include(url_reportes)),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

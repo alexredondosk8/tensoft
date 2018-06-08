@@ -8,6 +8,7 @@ from .models import *
 from propietarios.models import *
 from .forms import *
 from .utils import *
+from reportes.views import *
 
 # Create your views here.
 class InmueblesCreateView(CreateView):
@@ -88,6 +89,7 @@ class ListarInmuebles(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListarInmuebles, self).get_context_data(**kwargs)
+        print(context)
 
         estado = self.request.GET['estado']
 
