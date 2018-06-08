@@ -1,0 +1,27 @@
+<div class="row">
+  <h5>Reporte de inmuebles en estado {{ estado }}</h5>
+</div>
+<hr>
+<br>
+<div class="table-responsive">
+  <table id="datatable" class="table table-bordered table-striped bulk_action">
+    <thead>
+      <tr class="headings">
+        {% for campo in campos %}
+          <th>{{ campo }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for inmueble in inmuebles %}
+      <tr>
+        <td>{{ inmueble.codigo }}</td>
+        <td>{{ inmueble.fecha_registro }}</td>
+        <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
+        <td>{{ inmueble.barrio }}</td>
+        <td>{{ inmueble.municipio.nombre }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

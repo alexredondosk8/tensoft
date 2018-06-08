@@ -39,6 +39,11 @@
     </tbody>
   </table>
 </div>
+<div class="row">
+  <a href="/reportes/lista-inmuebles/pdf/{{ tipo_lista }}">
+    {% bootstrap_button 'Generar reporte PDF' name="reporte_pdf" %}
+  </a>
+</div>
 {% endblock contenido %}
 {% block javascripts %}
   {{ block.super }}
