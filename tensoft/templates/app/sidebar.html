@@ -68,6 +68,15 @@
           </ul>
         </li>
         {% endif %}
+        {% if request.user.groups.all.0.name == "usuario" %}
+        <li><a><i class="fa fa-user"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/cuenta/my/"> Ver</a></li>
+            <li><a href="/cuenta/actualizar/"> Actualizar</a></li>
+            <li><a href="/cuenta/eliminar/"> Eliminar</a></li>
+          </ul>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
