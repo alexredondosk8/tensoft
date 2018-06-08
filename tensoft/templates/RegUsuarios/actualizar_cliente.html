@@ -1,0 +1,35 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %} Información de representante {% endblock title %}
+
+{% block titulo_contenido %}Detalles de {{representante}}{% endblock titulo_contenido %}
+{% block titulo_especifico %}Información de representante{% endblock titulo_especifico %}
+
+{% block contenido %}
+{% if success %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+  <strong>¡Éxito!</strong> {{success}}
+</div>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <center>
+    <button class="btn btn-danger" name="cancelar">Cancelar</button>
+    <button class="btn btn-primary" name="actualizar">Guardar</button>
+  </center>
+</form>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+  </script>
+{% endblock javascripts %}
