@@ -28,9 +28,21 @@ url_reportes = [
         name='reporte-lista-inmuebles'),
 ]
 
+url_cuenta = [
+    url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
+    url(r'^login/$', Login.as_view(), name="login-usuario"),
+    url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
+    # url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    # url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
+    # url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
+
+]
+
 urlpatterns = [
+    url(r'^$', Inicio.as_view(), name='inicio'),
+    url(r'^cuenta/', include(url_cuenta)),
+    url(r'^registrar-mensaje/', admin.site.urls),
     url(r'^inmuebles/', include(url_inmuebles)),
-    url(r'^registrar/$', ClienteUsuario.as_view(), name="registrar-usuario"),
     url(r'^propietarios/', include(url_propietario)),
     url(r'^reportes/', include(url_reportes)),
 ]

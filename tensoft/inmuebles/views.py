@@ -173,6 +173,4 @@ class InmueblesMapa(TemplateView):
 
         context['inmuebles'] = json.dumps(info_mapa)
 
-        print(info_mapa)
-
         return context
