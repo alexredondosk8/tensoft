@@ -29,6 +29,7 @@ url_reportes_recaudos = [
     url(r'^facturas-vencidas/$', ReporteFacturas.as_view(), {'tipo': 'vencidas'}),
     url(r'^facturas-activas/$', ReporteFacturas.as_view(), {'tipo': 'activas'}),
     url(r'^seguimiento-inmuebles/$', SeguimientoPagosInmueble.as_view(), name="seguimiento-pagos"),
+    url(r'^estado-pagos/$', EstadoPagos.as_view(), name="estado-pagos"),
 ]
 
 url_reportes = [

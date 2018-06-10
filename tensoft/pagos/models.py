@@ -19,7 +19,7 @@ class PagosInmueble(models.Model):
     numero_factura = models.AutoField(primary_key=True)
     periodo_inicio_factura = models.DateField(null=True)
     periodo_final_factura = models.DateField(null=True)
-    fecha_emision_factura = models.DateTimeField(auto_now_add=True)
+    fecha_emision_factura = models.DateField(auto_now_add=True)
     fecha_limite_pago = models.DateField()
     fecha_pago = models.DateTimeField(null=True)
     valor_pago = models.FloatField()

@@ -6,7 +6,7 @@ import simplejson as json
 from django.template import Context
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
-from datetime import datetime
+from datetime import datetime, timedelta
 from inmobiliaria_tenant.models import *
 from inmuebles.models import *
 from propietarios.models import *
@@ -121,8 +121,6 @@ class ReporteEdadClientesRegistrados(TemplateView):
             },
         ]
 
-        print(info_json)
-
         context['json_info'] = json.dumps(info_json)
         return context
 
@@ -231,5 +229,60 @@ class SeguimientoPagosInmueble(TemplateView):
             ]
 
             context['inmueble'] = Inmueble.objects.get(codigo=codigo_inmueble)
+
+        return render(request, self.template_name, context)
+
+class EstadoPagos(TemplateView):
+    template_name = "reportes/recaudos/estado_pagos.html"
+
+    def post(self, request, *args, **kwargs):
+        context = super(EstadoPagos, self).get_context_data(**kwargs)
+
+        periodo_facturado = request.POST['periodo_facturado']
+        periodo = periodo_facturado.split(" - ")
+        print(periodo)
+
+        fecha_inicio = periodo[0]
+        fecha_fin = periodo[1]
+
+        formato = "%m/%d/%Y"
+        nuevo_formato = "%Y-%m-%d"
+
+        fecha_inicio_formato = datetime.strptime(fecha_inicio, formato).date()
+        fecha_fin_formato = datetime.strptime(fecha_fin, formato).date()
+
+        if fecha_inicio_formato == fecha_fin_formato and fecha_inicio_formato == datetime.now().date():
+            fecha_inicio_formato = fecha_fin_formato - timedelta(days=30)
+
+        facturas = PagosInmueble.objects.filter(
+            fecha_emision_factura__gte=fecha_inicio_formato,
+            fecha_emision_factura__lte=fecha_fin_formato+timedelta(days=1),
+        ).order_by('fecha_emision_factura')
+        
+        numero_pagadas = facturas.filter(pagada=True).count()
+        numero_activas = facturas.filter(pagada=False, fecha_limite_pago__gte=datetime.now()).count()
+        numero_vencidas = facturas.filter(pagada=False, fecha_limite_pago__lte=datetime.now()).count()
+
+        json_info = [
+            {
+                'tipo_factura': 'Facturas pagadas',
+                'value': numero_pagadas
+            },
+            {
+                'tipo_factura': 'Facturas no pagadas no vencidas',
+                'value': numero_activas
+            },
+            {
+                'tipo_factura': 'Facturas vencidas',
+                'value': numero_vencidas
+            }
+        ]
+
+        context['json_info'] = json.dumps(json_info)
+        context['periodo_json'] = json.dumps([{'periodo': periodo_facturado}])
+        context['cantidad_facturas'] = len(facturas)
+        context['periodo'] = periodo_facturado
+        context['fecha_inicio'] = fecha_inicio_formato
+        context['fecha_fin'] = fecha_fin_formato
 
         return render(request, self.template_name, context)
