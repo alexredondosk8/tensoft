@@ -1,0 +1,42 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+<form method="post" class="form-horizontal">
+  {% csrf_token %}
+  <fieldset>
+    <div class="control-group form-group">
+      <label class="control-label">Periodo facturado</label>
+      <div class="controls">
+        <div class="input-prepend input-group form-control">
+          <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+          <input type="text" style="width: 200px" name="periodo_facturado" id="reservation" class="form-control"
+           required/>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  {% bootstrap_button "Generar Factura" %}
+</form>
+
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+  </script>
+{% endblock javascripts %}

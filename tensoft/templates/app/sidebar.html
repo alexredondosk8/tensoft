@@ -68,12 +68,25 @@
           </ul>
         </li>
         {% endif %}
-        {% if request.user.groups.all.0.name == "usuario" %}
-        <li><a><i class="fa fa-user"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
+        {% if request.user.groups.all.0.name == "usuario-inmobiliaria" %}
+        <li><a><i class="fa fa-money"></i> Sección de pagos <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="/cuenta/my/"> Ver</a></li>
-            <li><a href="/cuenta/actualizar/"> Actualizar</a></li>
-            <li><a href="/cuenta/eliminar/"> Eliminar</a></li>
+            <li><a href="/payment/consultar/"> Consultar facturas por pagar</a></li>
+            <li><a href="/payment/historico/"> Consultar facturas pagadas</a></li>
+          </ul>
+        </li>
+        <!-- MENÚ DE OPCIONES PARA USUARIO PROPIETARIO -->
+        <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a> Recaudo <span class="fa fa-chevron-down"></span></a>
+              <ul class="nav child_menu">
+                <li><a href="#"> Ver recaudo</a></li>
+                <li><a href="/reportes/recaudos/estado-pagos/"> Estado actual de pagos</a></li>
+                <li><a href="/reportes/recaudos/facturas-vencidas/"> Facturas en mora</a></li>
+                <li><a href="/reportes/recaudos/facturas-activas/"> Facturas activas</a></li>
+                <li><a href="/reportes/recaudos/seguimiento-inmuebles/"> Seguimiento de recaudo por inmueble</a></li>
+              </ul>
+            </li>
           </ul>
         </li>
         {% endif %}
