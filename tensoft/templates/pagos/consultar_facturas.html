@@ -1,0 +1,31 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  <div class="table-responsive">
+    <table id="datatable" class="table table-bordered table-striped bulk_action">
+      <thead>
+        <tr class="headings">
+          {% for campo in campos %}
+            <th>{{ campo }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for factura in facturas %}
+        <tr>
+          <td>{{ factura.numero_factura }}</td>
+          <td>{{ factura.periodo_inicio_factura }} a {{ factura.periodo_final_factura }}</td>
+          <td>{{ factura.valor_pago | floatformat:2 }} {{ factura.get_tipo_moneda }}</td>
+          <td>{{ factura.fecha_limite_pago }}</td>
+          <td>{{ factura.inmueble.direccion }}, {{ factura.inmueble.municipio.nombre }},
+           {{ factura.inmueble.municipio.departamento.nombre }}</td>
+          <td>{{ factura.get_tipo_pago }}</td>
+          <td><a href="#">Ver más</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock contenido %}
