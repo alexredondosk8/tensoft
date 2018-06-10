@@ -73,15 +73,24 @@ class Inmueble(models.Model):
     fecha_registro = models.DateTimeField(default=datetime.now())
     estado_operacional = models.IntegerField(choices=opt_estado_operacional, default=1)
     propietario = models.ForeignKey('propietarios.Propietario', null=True)
-    #arrendatario = models.ForeignKey('RegUsuarios.Usuario', null=True)
+    arrendatario = models.ForeignKey('RegUsuarios.Usuario', null=True)
 
-    def get_tipo_inmueble(self):
+    def get_tipo_inmueble(self, capitalize=True):
         if self.tipo_inmueble == 1:
-            return 'Casa'
+            if capitalize:
+                return 'Casa'
+            else:
+                return 'casa'
         elif self.tipo_inmueble == 2:
-            return 'Apartamento'
+            if capitalize:
+                return 'Apartamento'
+            else:
+                return 'apartamento'
         else:
-            return 'Local'
+            if capitalize:
+                return 'Local'
+            else:
+                return 'local'
 
     def get_tipo_transaccion(self):
         if self.tipo_transaccion == 1:

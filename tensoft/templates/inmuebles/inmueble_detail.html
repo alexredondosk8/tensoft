@@ -88,7 +88,7 @@
       </tbody>
     </table>
   </div>
-  {% else %}
+  {% endif %}
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
@@ -265,7 +265,6 @@
     </div>
 
   </div>
-  {% endif %}
 {% endblock contenido %}
 
 {% block javascripts %}

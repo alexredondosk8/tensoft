@@ -4,8 +4,11 @@ from django.core.paginator import Paginator
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
 from django.contrib import messages
 import simplejson as json
+from datetime import datetime, timedelta
 from .models import *
 from propietarios.models import *
+from RegUsuarios.models import *
+from pagos.models import *
 from .forms import *
 from .utils import *
 from reportes.views import *
@@ -174,3 +177,55 @@ class InmueblesMapa(TemplateView):
         context['inmuebles'] = json.dumps(info_mapa)
 
         return context
+
+class GenerarFacturaPago(TemplateView):
+    template_name = "pagos/generar_factura.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(GenerarFacturaPago, self).get_context_data(**kwargs)
+        inmueble = Inmueble.objects.get(codigo=kwargs['id_inmueble'])
+        context['inmueble'] = inmueble
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(GenerarFacturaPago, self).get_context_data(**kwargs)
+        inmueble = Inmueble.objects.get(codigo=kwargs['id_inmueble'])
+        context['inmueble'] = inmueble
+
+        periodo_facturado = request.POST['periodo_facturado']
+        periodo = periodo_facturado.split(" - ")
+        print(periodo)
+
+        fecha_inicio = periodo[0]
+        fecha_fin = periodo[1]
+
+        formato = "%m/%d/%Y"
+        nuevo_formato = "%Y-%m-%d"
+
+        fecha_inicio_formato = datetime.strptime(fecha_inicio, formato).date()
+        fecha_fin_formato = datetime.strptime(fecha_fin, formato).date()
+
+        if fecha_inicio_formato < fecha_fin_formato:
+
+            factura = PagosInmueble(
+                periodo_inicio_factura = fecha_inicio_formato,
+                periodo_final_factura = fecha_fin_formato,
+                fecha_limite_pago = datetime.now()+timedelta(days=10),
+                valor_pago = inmueble.valor,
+                tipo_moneda = inmueble.tipo_moneda,
+                tipo_pago = inmueble.tipo_transaccion,
+                usuario = Usuario.objects.get(cedula='244224'),
+                inmueble = inmueble,
+            )
+
+            factura.save()
+
+            messages.add_message(request, messages.SUCCESS, 'Se emitió la factura exitosamente')
+
+            return render(request, self.template_name, context)
+
+        else:
+            messages.add_message(request, messages.ERROR, 'La fecha de finalización debe ser mayor a '+
+                'la fecha de inicio del periodo')
+            return render(request, self.template_name, context)

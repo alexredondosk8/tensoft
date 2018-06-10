@@ -1,0 +1,56 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}
+  Factura # {{ object.numero_factura }}
+{% endblock title %}
+
+{% block titulo_contenido %}
+  Factura # {{ object.numero_factura }}
+{% endblock titulo_contenido %}
+
+{% block titulo_especifico %}
+  Información detallada
+{% endblock titulo_especifico %}
+
+{% block contenido %}
+<div class="responsive">
+  <table class="table table-responsive table-striped table-bordered">
+    <tbody>
+      <tr>
+        <td><strong>Número de factura</strong></td>
+        <td>{{ object.numero_factura }}</td>
+      </tr>
+      <tr>
+        <td><strong>Fecha de generación</strong></td>
+        <td>{{ object.fecha_emision_factura }}</td>
+      </tr>
+      <tr>
+        <td><strong>Fecha límite de pago</strong></td>
+        <td>{{ object.fecha_limite_pago }}</td>
+      </tr>
+      <tr>
+        <td><strong>Valor</strong></td>
+        <td>{{ object.valor_pago  | floatformat:2 }}</td>
+      </tr>
+      <tr>
+        <td><strong>¿Factura pagada?</strong></td>
+        {% if object.pagada %}
+          <td>Sí</td>
+          <tr>
+            <td><strong>Fecha de pago</strong></td>
+            <td>{{ object.fecha_pago }}</td>
+          </tr>
+        {% else %}
+          <td>No</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <td><strong>Dirección inmueble relacionado</strong></td>
+        <td>{{ object.inmueble.direccion }}, {{ object.inmueble.municipio.nombre }}
+        , {{ object.inmueble.municipio.departamento.nombre }}</td>
+      </tr>
+  </table>
+{% endblock contenido %}
