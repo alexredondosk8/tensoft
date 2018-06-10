@@ -69,8 +69,10 @@ TENANT_DOMAIN_MODEL = "inmobiliaria_tenant.Domain"
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcdV1MUAAAAAHM8NjfYANxwvPYotHr_zz-wlmDi'
 NOCAPTCHA = True
 
-# Cuenta payU 2730b5e321@happymail.guru
-# cuenta paypal df42d06fa0@happymail.guru
+# SETTINGS PARA TESTEO DE PAGOS CON PAYPAL
+
+# cuenta paypal para pagos = df42d06fa0-buyer@happymail.guru
+# pass paypal para pagos = univalleA1
 
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'soporte.tensoft@gmail.com'

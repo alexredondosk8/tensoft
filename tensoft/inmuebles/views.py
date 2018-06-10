@@ -4,8 +4,6 @@ from django.core.paginator import Paginator
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
 from django.contrib import messages
 import simplejson as json
-from decimal import Decimal
-from payments import get_payment_model
 from datetime import datetime, timedelta
 from .models import *
 from propietarios.models import *
