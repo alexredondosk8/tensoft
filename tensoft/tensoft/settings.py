@@ -56,9 +56,9 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'inmuebles',
     'propietarios',
     'RegUsuarios',
-    'django.contrib.humanize'
-
-    #'mensajes',
+    'pagos',
+    'paypal.standard.ipn',
+    'django.contrib.humanize',
 )
 
 INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
@@ -68,6 +68,14 @@ TENANT_DOMAIN_MODEL = "inmobiliaria_tenant.Domain"
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcdV1MUAAAAAHM8NjfYANxwvPYotHr_zz-wlmDi'
 NOCAPTCHA = True
+
+# SETTINGS PARA TESTEO DE PAGOS CON PAYPAL
+
+# cuenta paypal para pagos = df42d06fa0-buyer@happymail.guru
+# pass paypal para pagos = univalleA1
+
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'soporte.tensoft@gmail.com'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 

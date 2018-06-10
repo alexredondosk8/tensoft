@@ -1,0 +1,81 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="control-label">Seleccione un inmueble</label>
+      <select name="inmueble" class="form-control"required>
+        <option value="0" selected>---------</option>
+        {% for inmueble in inmuebles %}
+          <option value="{{ inmueble.codigo }}">{{ inmueble.get_tipo_inmueble }}, {{ inmueble.municipio.nombre }}
+            , {{ inmueble.barrio }}, {{ inmueble.direccion }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Número de facturas a mostrar (si no ingresa ningún valor se mostrarán las
+        últimas 12 facturas emitidas o las que estén disponibles)</label>
+      <input name="numero-facturas" id="id_numero-facturas" type="number" class="form-control">
+    </div>
+    {% bootstrap_button "Consultar" button_class="btn btn-primary" %}
+  </form>
+  {% if campos %}
+  <hr>
+  <br>
+  <h3>Seguimiento de pagos a {{ inmueble.get_tipo_inmueble }} en {{ inmueble.municipio.nombre }}</h3>
+  <div class="table-responsive">
+    <table id="datatable" class="table table-bordered table-striped bulk_action">
+      <thead>
+        <tr class="headings">
+          {% for campo in campos %}
+            <th>{{ campo }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for factura in facturas %}
+        {% if factura.is_factura_mora or factura.is_factura_pagada_a_tiempo == False %}
+          <tr class="table-danger" style="background-color:#f5c6cb;">
+        {% else %}
+          <tr>
+        {% endif %}
+            <td>{{ factura.numero_factura }}</td>
+            <td>{{ factura.usuario }}</td>
+            <td>{{ factura.periodo_inicio_factura }} a {{ factura.periodo_final_factura }}</td>
+            <td>{{ factura.valor_pago | floatformat:2 }} {{ factura.get_tipo_moneda }}</td>
+            <td>{{ factura.fecha_emision_factura }}</td>
+            <td>{{ factura.fecha_limite_pago }}</td>
+            {% if factura.fecha_pago %}
+              <td>{{ factura.fecha_pago }}</td>
+            {% else %}
+              <td>Pendiente de pago</td>
+            {% endif %}
+            <td>{{ factura.get_dias_mora }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script>
+    $(".alert").delay(4000).slideUp(200, function() {
+        $(this).alert('close');
+    });
+  </script>
+{% endblock javascripts %}
