@@ -6,8 +6,11 @@ import simplejson as json
 from django.template import Context
 from django.template.loader import get_template
 from weasyprint import HTML, CSS
+from datetime import datetime
 from inmobiliaria_tenant.models import *
 from inmuebles.models import *
+from propietarios.models import *
+from pagos.models import *
 from inmobiliaria_tenant.utils import actualizar_edad_clientes
 
 # Create your views here.
@@ -122,3 +125,111 @@ class ReporteEdadClientesRegistrados(TemplateView):
 
         context['json_info'] = json.dumps(info_json)
         return context
+
+class ReporteFacturas(TemplateView):
+    template_name = "reportes/recaudos/facturas.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ReporteFacturas, self).get_context_data(**kwargs)
+
+        # Cambiar cuando se tenga un usuario propietario
+        id_propietario = 1
+        propietario = Propietario.objects.get(id_propietario=id_propietario)
+        inmuebles_asociados = Inmueble.objects.filter(propietario=propietario)
+
+        if kwargs['tipo'] == 'vencidas':
+            facturas = PagosInmueble.objects.filter(
+                pagada=False,
+                fecha_limite_pago__lt = datetime.now().date(),
+                inmueble__in=inmuebles_asociados
+            ).order_by('fecha_limite_pago')
+
+        elif kwargs['tipo'] == 'activas':
+            facturas = PagosInmueble.objects.filter(
+                pagada=False,
+                inmueble__in=inmuebles_asociados,
+            ).order_by('fecha_limite_pago')
+
+        context['facturas'] = facturas
+        context['campos'] = [
+            'Número de factura',
+            'Cliente',
+            'Periodo facturado',
+            'Valor pago',
+            'Fecha límite de pago',
+            'Inmueble asociado',
+            'Tipo de transacción',
+            'Acciones',
+        ]
+
+        return context
+
+class SeguimientoPagosInmueble(TemplateView):
+    template_name="reportes/recaudos/seguimiento.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SeguimientoPagosInmueble, self).get_context_data(**kwargs)
+
+        # Cambiar cuando se tenga un usuario propietario
+        id_propietario = 1
+        propietario = Propietario.objects.get(id_propietario=id_propietario)
+        inmuebles_asociados = Inmueble.objects.filter(propietario=propietario)
+
+        inmuebles = Inmueble.objects.filter(propietario=propietario).order_by(
+            'tipo_inmueble',
+            'municipio__nombre',
+            'barrio',
+            'direccion'
+        )
+
+        context['inmuebles'] = inmuebles
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        context = super(SeguimientoPagosInmueble, self).get_context_data(**kwargs)
+
+        codigo_inmueble = request.POST['inmueble']
+
+        # Cambiar cuando se tenga un usuario propietario
+        id_propietario = 1
+        propietario = Propietario.objects.get(id_propietario=id_propietario)
+        inmuebles = Inmueble.objects.filter(propietario=propietario).order_by(
+            'tipo_inmueble',
+            'municipio__nombre',
+            'barrio',
+            'direccion'
+        )
+
+        context['inmuebles'] = inmuebles
+
+        if codigo_inmueble == 0:
+            messages.add_message(self.request, messages.ERROR, 'Debe seleccionar un inmueble')
+
+        else:
+            # Cambiar cuando se tenga un usuario propietario
+            id_propietario = 1
+            propietario = Propietario.objects.get(id_propietario=id_propietario)
+            inmuebles_asociados = Inmueble.objects.filter(propietario=propietario)
+
+            numero_facturas = 12
+            if request.POST['numero-facturas']:
+                numero_facturas = int(request.POST['numero-facturas'])
+
+            facturas = PagosInmueble.objects.all().order_by('-fecha_limite_pago')[:numero_facturas]
+            context['facturas'] = facturas
+
+            context['campos'] = [
+                'Número de factura',
+                'Cliente',
+                'Periodo facturado',
+                'Valor a pagar',
+                'Fecha de generación factura',
+                'Fecha límite de pago',
+                'Fecha de pago',
+                'Días de mora',
+            ]
+
+            context['inmueble'] = Inmueble.objects.get(codigo=codigo_inmueble)
+
+        return render(request, self.template_name, context)

@@ -101,7 +101,7 @@ class UsuarioClienteCreateView(TemplateView):
                     grupo.user_set.add(nuevo_usuario)
                 except:
                     grupo = Group()
-                    grupo.name = 'usuario-cliente'
+                    grupo.name = 'usuario-inmobiliaria'
                     grupo.save()
                     grupo.user_set.add(nuevo_usuario)
 
