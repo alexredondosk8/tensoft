@@ -44,6 +44,7 @@ SHARED_APPS = (
     'django.contrib.admin',
     'bootstrap3',
     'captcha',
+    'social_django',
     'parreporter_tool',
     'reportes'
 
@@ -59,6 +60,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'pagos',
     'paypal.standard.ipn',
     'django.contrib.humanize',
+    #'social_django',
 )
 
 INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
@@ -89,6 +91,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'tensoft.tenant_urls'
@@ -97,7 +100,9 @@ PUBLIC_SCHEMA_URLCONF = 'tensoft.public_urls'
 PUBLIC_SCHEMA_NAME = 'public'
 
 LOGIN_URL = '/cuenta/login/'
+LOGOUT_URL = '/cuenta/logout/'
 LOGOUT_REDIRECT_URL = '/cuenta/login/'
+LOGIN_REDIRECT_URL = '/'
 
 TEMPLATES = [
     {
@@ -110,6 +115,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -154,12 +161,39 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# settings para envío de correos a usuarios
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'soporte.tensoft@gmail.com'
 EMAIL_HOST_PASSWORD = 'univalle'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Soporte TenSoft <noreply@TenSoft.com>'
+
+# autenticación por redes sociales
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# autenticación con GitHub
+
+SOCIAL_AUTH_GITHUB_KEY = '0c7b099d520be1632d8c'
+SOCIAL_AUTH_GITHUB_SECRET = '7ac7e0a149a768c669861139b15d0915d16c2410'
+
+# Autenticación con Twitter
+
+SOCIAL_AUTH_TWITTER_KEY = 'zklNV0S4VP8yacYSKsaCcrwAz'
+SOCIAL_AUTH_TWITTER_SECRET = 'WEvMn1RJStmPIpF0ETlpIJePKddGNEeDnVsEvFY5KIaaNSxdPH'
+
+# Autenticación con Google
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='326677152370-tm62hroj9k7bjm0lb25fnh19q6aov4fd.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '55mBIllASJB22RhWS3ROLzjp'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
