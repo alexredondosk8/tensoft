@@ -56,6 +56,7 @@
             <td>{{ factura.usuario }}</td>
             <td>{{ factura.periodo_inicio_factura }} a {{ factura.periodo_final_factura }}</td>
             <td>{{ factura.valor_pago | floatformat:2 }} {{ factura.get_tipo_moneda }}</td>
+            <td>{{ factura.inmueble.get_tipo_transaccion }}</td>
             <td>{{ factura.fecha_emision_factura }}</td>
             <td>{{ factura.fecha_limite_pago }}</td>
             {% if factura.fecha_pago %}

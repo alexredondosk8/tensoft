@@ -222,6 +222,7 @@ class SeguimientoPagosInmueble(TemplateView):
                 'Cliente',
                 'Periodo facturado',
                 'Valor a pagar',
+                'Concepto',
                 'Fecha de generación factura',
                 'Fecha límite de pago',
                 'Fecha de pago',
@@ -258,7 +259,7 @@ class EstadoPagos(TemplateView):
             fecha_emision_factura__gte=fecha_inicio_formato,
             fecha_emision_factura__lte=fecha_fin_formato+timedelta(days=1),
         ).order_by('fecha_emision_factura')
-        
+
         numero_pagadas = facturas.filter(pagada=True).count()
         numero_activas = facturas.filter(pagada=False, fecha_limite_pago__gte=datetime.now()).count()
         numero_vencidas = facturas.filter(pagada=False, fecha_limite_pago__lte=datetime.now()).count()

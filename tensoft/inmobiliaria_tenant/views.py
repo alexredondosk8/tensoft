@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.shortcuts import render, redirect, render_to_response
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.views.generic import ListView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -19,13 +20,36 @@ from inmuebles.utils import insertar_departamentos_municipios
 class Inicio(TemplateView):
     template_name = 'app/index.html'
 
+    def get(self, request):
+
+        if not self.request.user.is_anonymous and len(self.request.user.groups.all()) == 0:
+            return redirect("/cuenta/registrar/")
+
+        else:
+            return render(request, self.template_name)
+
+
 class ClienteCreateView(TemplateView):
     template_name = "inmobiliaria_tenant/cliente_form.html"
 
     def get_context_data(self, **kwargs):
         context = super(ClienteCreateView, self).get_context_data(**kwargs)
-        context['form'] = FormRegistroCliente
 
+        usuario = self.request.user
+
+        if not usuario.is_anonymous:
+            form = FormRegistroCliente(
+                initial = {
+                    'nombre': usuario.first_name,
+                    'apellidos': usuario.last_name,
+                    'correo': usuario.email,
+                }
+            )
+
+        else:
+            form = FormRegistroCliente
+
+        context['form'] = form
         return context
 
     def post(self, request, *args, **kwargs):
@@ -61,9 +85,28 @@ class ClienteCreateView(TemplateView):
                 )
 
                 cliente_registrado.save()
-                request.session['cedula'] = cedula
 
-                return HttpResponseRedirect('/cuenta/registrar/usuario')
+                if request.user.is_anonymous:
+                    request.session['cedula'] = cedula
+
+                    return HttpResponseRedirect('/cuenta/registrar/usuario')
+
+                else:
+                    cliente_registrado.usuario = request.user
+                    cliente_registrado.save()
+
+                    try:
+                        grupo = Group.objects.get(name='cliente-inmobiliaria')
+                        grupo.user_set.add(request.user)
+                    except:
+                        grupo = Group()
+                        grupo.name = 'cliente-inmobiliaria'
+                        grupo.save()
+                        grupo.user_set.add(request.user)
+
+                    messages.add_message(request, messages.SUCCESS, 'Se actualizó la información' +
+                        ' correctamente')
+                    return render(request, "app/index.html", context)
         else:
             context['form'] = form_cliente
             return render(request, self.template_name, context)
