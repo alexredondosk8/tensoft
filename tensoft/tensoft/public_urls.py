@@ -33,7 +33,8 @@ urlpatterns_cuenta = [
     url(r'^login/$', Login.as_view(), name="login-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
-    url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
+    url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
 
 urlpatterns_inmobiliarias = [
