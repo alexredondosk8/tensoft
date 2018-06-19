@@ -136,7 +136,11 @@ class UsuarioClienteCreateView(TemplateView):
                 password = request.POST['password']
                 cliente = Cliente.objects.get(cedula=request.session['cedula'])
                 correo = cliente.correo
-                nuevo_usuario = User.objects.create_user(username=correo, password=password)
+                nuevo_usuario = User.objects.create_user(
+                    username=correo,
+                    password=password,
+                    email=correo
+                )
                 nuevo_usuario.save()
                 cliente.usuario = nuevo_usuario
                 cliente.save()
