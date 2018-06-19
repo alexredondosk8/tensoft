@@ -2,14 +2,24 @@ import os
 from subprocess import call
 from .models import *
 
-def get_lista_inmuebles(usuario, estado):
-    if usuario.is_superuser:
-        return Inmueble.objects.filter(estado=True, estado_operacional=estado).order_by('fecha_registro')
+def get_lista_inmuebles(usuario, estado=0):
+    if estado == 0:
+        if usuario.is_superuser:
+            return Inmueble.objects.filter(estado=True).order_by('fecha_registro')
+        else:
+            return Inmueble.objects.filter(estado=True).order_by('fecha_registro')
+
     else:
-        return Inmueble.objects.filter(estado=True, estado_operacional=estado).order_by('fecha_registro')
+        if usuario.is_superuser:
+            return Inmueble.objects.filter(estado=True, estado_operacional=estado).order_by('fecha_registro')
+        else:
+            return Inmueble.objects.filter(estado=True, estado_operacional=estado).order_by('fecha_registro')
 
     return []
 
+def get_lista_inmuebles_por_tipo(propietario, tipo):
+    return Inmueble.objects.filter(tipo_inmueble=tipo, propietario=propietario)
+    
 def insertar_departamentos_municipios(schema_name):
     archivo_dep = open("acciones_previas/departamentos.txt")
     departamentos = archivo_dep.readlines()

@@ -41,7 +41,11 @@ class InmueblesCreateView(CreateView):
             form_class = self.get_form_class()
 
         form = super(InmueblesCreateView, self).get_form(form_class)
+
+        ########### CAMBIAR CUANDO HAYA USUARIO #############
         propietario = Propietario.objects.get(pk=1)
+        #propietario = Propietario.objects.get(usuario=self.request.user)
+
         form.fields['propietario'].initial = propietario.id_propietario
         form.fields['propietario'].disabled = True
         return form
@@ -50,6 +54,13 @@ class InmueblesCreateView(CreateView):
         context = super(InmueblesCreateView, self).get_context_data(**kwargs)
         context['municipios'] = get_municipios_dpto()
         return context
+
+    def form_valid(self, form):
+        inmueble_instancia = form.instance
+        self.object = form.save()
+        codigo = self.object.codigo
+        self.success_url = "/inmuebles/registrar/" + str(codigo) + "/fotos/"
+        return super().form_valid(form)
 
 class AgregarFotosInmueble(TemplateView):
     template_name = "inmuebles/registrar_fotos_inmueble.html"
@@ -92,15 +103,57 @@ class ListarInmuebles(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListarInmuebles, self).get_context_data(**kwargs)
-        print(context)
+        lista_inmuebles = []
 
-        estado = self.request.GET['estado']
+        if 'estado' in self.request.GET:
+            estado = self.request.GET['estado']
+            lista_inmuebles = get_lista_inmuebles(self.request.user, estado)
 
-        lista_inmuebles = get_lista_inmuebles(self.request.user, estado)
+            if estado == '1':
+                context['tipo_lista'] = "Inmuebles disponibles"
+            elif estado == '2':
+                context['tipo_lista'] = "Inmuebles ocupados"
+            elif estado == '3':
+                context['tipo_lista'] = "Inmuebles no disponibles"
+
+        elif 'tipo' in self.request.GET:
+            ########### CAMBIAR CUANDO HAYA USUARIO ###########
+            propietario = Propietario.objects.get(pk=1)
+            tipo = self.request.GET['tipo']
+
+            lista_inmuebles = get_lista_inmuebles_por_tipo(propietario, tipo)
+
+            if tipo == '1':
+                context['tipo_lista'] = "Casas"
+            elif tipo == '2':
+                context['tipo_lista'] = "Apartamentos"
+            elif tipo == '3':
+                context['tipo_lista'] = "Locales"
+            else:
+                print(tipo)
+
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-        context['tipo_lista'] = estado
+
         context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
+
+        context['lista_inmuebles'] = lista_inmuebles
+
+        return context
+
+class ListarInmueblesActivos(ListView):
+    model = Inmueble
+    template_name = "inmuebles/lista_inmuebles.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(ListarInmueblesActivos, self).get_context_data(**kwargs)
+
+        lista_inmuebles = get_lista_inmuebles(self.request.user)
+        paginator = Paginator(lista_inmuebles, self.paginate_by)
+
+        context['tipo_lista'] = 'Inmuebles registrados'
+        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Estado', 'Acción']
 
         context['lista_inmuebles'] = lista_inmuebles
 
