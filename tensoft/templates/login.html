@@ -1,5 +1,6 @@
 {% extends "app/base_site.html" %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block title %} Login {% endblock title %}
 
@@ -19,20 +20,15 @@
     <div class="login_wrapper">
       <div class="animate form login_form">
         <section class="login_content">
+
           <form method="post" data-parsley-validate>
             {% csrf_token %}
-            <h1>Inicio de sesión</h1>
-            <div>
-              <input type="text" class="form-control" placeholder="username" required="" name="username"/>
-            </div>
-            <div>
-              <input type="password" class="form-control" placeholder="password" required="" name="password"/>
-            </div>
+            {% bootstrap_form form %}
             <div>
               <button class="btn btn-primary btn-block">Iniciar sesión</button>
             </div>
             <div>
-              <a href="#">¿Olvidé mi contraseña?</a>
+              <a href="/cuenta/password_reset/">Olvidé mi contraseña</a>
             </div>
             <br />
             <div class="row">

@@ -33,20 +33,25 @@ url_reportes_recaudos = [
     url(r'^estado-pagos/$', EstadoPagos.as_view(), name="estado-pagos"),
 ]
 
+url_reportes_citas = [
+    url(r'^programacion/$', ConsultarCalendarioCitas.as_view(), name="programacion-citas"),
+]
+
 url_reportes = [
     url(r'^lista-inmuebles/(?P<formato>(html|pdf))/(?P<id>[\w.@+-]+)/$', ReporteListaInmuebles.as_view(),
         name='reporte-lista-inmuebles'),
     url(r'^recaudos/', include(url_reportes_recaudos)),
+    url(r'^recaudos/', include(url_reportes_citas)),
 ]
 
 url_cuenta = [
     url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
-    url(r'^login/$', Login.as_view(), name="login-usuario"),
+    url(r'^login/$', auth_views.login, name="login-usuario"),
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     # url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
     # url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
-    #url(r'^oauth/', include('social_django.urls', namespace='social')),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 
 ]
 

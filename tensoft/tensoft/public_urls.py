@@ -55,7 +55,7 @@ urlpatterns_inmobiliarias = [
 urlpatterns_dev = [
     #url(r'^$', )
     url(r'^reportar/$', login_required(ReportarProblema.as_view()), name="reportar-problema"),
-    #url(r'^reportar/$', CerrarProblema.as_view(), name="cerrar-problema")
+    url(r'^lista/abiertas$', login_required(ListaProblemasActivos.as_view()), name="listar-problema"),
 ]
 
 urlpatterns_reportes = [

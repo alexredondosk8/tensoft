@@ -287,3 +287,6 @@ class EstadoPagos(TemplateView):
         context['fecha_fin'] = fecha_fin_formato
 
         return render(request, self.template_name, context)
+
+class ConsultarCalendarioCitas(TemplateView):
+    template_name = "reportes/citas/calendario_citas.html"
