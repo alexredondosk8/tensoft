@@ -23,7 +23,9 @@ url_inmuebles = [
 ]
 
 url_propietario = [
-    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
+    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario"),
+    url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarPropietario.as_view(), name='actualizar-propietario'),
+    url(r'^lista/$', ListarPropietarios.as_view(), name='listar-propietarios'),
 ]
 
 url_reportes_recaudos = [
