@@ -60,7 +60,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'pagos',
     'paypal.standard.ipn',
     'django.contrib.humanize',
-    #'social_django',
+    'social_django',
 )
 
 INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
