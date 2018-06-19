@@ -11,10 +11,10 @@
   <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 {% endblock stylesheets %}
 
-{% block title %} Lista de {{ tipo_lista }} {% endblock title %}
+{% block title %} Inconvenientes reportados {% endblock title %}
 
-{% block titulo_contenido %}Lista de inmobiliarias{% endblock titulo_contenido %}
-{% block titulo_especifico %}{{ tipo_lista }}{% endblock titulo_especifico %}
+{% block titulo_contenido %} Lista de inconvenientes {% endblock titulo_contenido %}
+{% block titulo_especifico %}{{tipo_lista}}{% endblock titulo_especifico %}
 
 {% block contenido %}
 <div class="table-responsive">
@@ -27,22 +27,17 @@
       </tr>
     </thead>
     <tbody>
-      {% for inmueble in lista_inmuebles %}
+      {% for inconveniente in lista_inconvenientes %}
       <tr>
-        <td>{{ inmueble.codigo }}</td>
-        <td>{{ inmueble.fecha_registro }}</td>
-        <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
-        <td>{{ inmueble.barrio }}</td>
-        <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
+        <td>{{ inconveniente.get_prioridad }}</td>
+        <td>{{ inconveniente.mensaje }}</td>
+        <td>{{ inconveniente.fecha_generacion }}</td>
+        <td>{{ inconveniente.desarrollador }}</td>
+        <td><a href="/inconvenientes/{{ inconveniente.codigo }}/">Ver más</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-</div>
-<div class="row">
-  <a href="/reportes/lista-inmuebles/pdf/{{ tipo_lista }}">
-    {% bootstrap_button 'Generar reporte PDF' name="reporte_pdf" %}
-  </a>
 </div>
 {% endblock contenido %}
 {% block javascripts %}
