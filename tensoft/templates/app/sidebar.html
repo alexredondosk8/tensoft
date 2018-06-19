@@ -75,7 +75,23 @@
             <li><a href="/payment/historico/"> Consultar facturas pagadas</a></li>
           </ul>
         </li>
-        <!-- MENÚ DE OPCIONES PARA USUARIO PROPIETARIO -->
+        {% elif request.user.groups.all.0.name == "propietario" %}
+        <li><a><i class="fa fa-building"></i> Inmuebles <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmuebles/registrar/"> Registrar nuevo inmueble</a></li>
+            <li><a> Listados <span class="fa fa-chevron-down"></span></a>
+              <ul class="nav child_menu">
+                <li><a href="/inmuebles/lista/activos/"> Todos los activos</a></li>
+                <li><a href="/inmuebles/lista/?estado=1"> Disponibles</a></li>
+                <li><a href="/inmuebles/lista/?estado=2"> Ocupados</a></li>
+                <li><a href="/inmuebles/lista/?estado=3"> No disponibles</a></li>
+                <li><a href="/inmuebles/lista/?tipo=1"> Casas</a></li>
+                <li><a href="/inmuebles/lista/?tipo=2"> Apartamentos</a></li>
+                <li><a href="/inmuebles/lista/?tipo=3"> Locales</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
         <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a> Recaudo <span class="fa fa-chevron-down"></span></a>
