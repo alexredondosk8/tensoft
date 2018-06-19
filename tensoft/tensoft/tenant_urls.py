@@ -33,10 +33,15 @@ url_reportes_recaudos = [
     url(r'^estado-pagos/$', EstadoPagos.as_view(), name="estado-pagos"),
 ]
 
+url_reportes_citas = [
+    url(r'^programacion/$', ConsultarCalendarioCitas.as_view(), name="programacion-citas"),
+]
+
 url_reportes = [
     url(r'^lista-inmuebles/(?P<formato>(html|pdf))/(?P<id>[\w.@+-]+)/$', ReporteListaInmuebles.as_view(),
         name='reporte-lista-inmuebles'),
     url(r'^recaudos/', include(url_reportes_recaudos)),
+    url(r'^recaudos/', include(url_reportes_citas)),
 ]
 
 url_cuenta = [

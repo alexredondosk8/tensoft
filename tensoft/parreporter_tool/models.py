@@ -18,3 +18,11 @@ class ReportarInconveniente(models.Model):
     fecha_generacion = models.DateTimeField(default=datetime.now())
     fecha_cierre = models.DateTimeField(null=True)
     observaciones = models.TextField(max_length=1000, null=True)
+
+    def get_prioridad(self):
+        if self.prioridad == 1:
+            return 'Baja'
+        elif self.prioridad == 2:
+            return 'Media'
+        else:
+            return 'Alta'
