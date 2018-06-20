@@ -69,6 +69,15 @@
         </li>
         {% endif %}
         {% if request.user.groups.all.0.name == "usuario-inmobiliaria" %}
+        <li><a><i class="fa fa-building"></i> Inmuebles <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmuebles/buscar/"> Iniciar búsqueda</a></li>
+            <li><a href="/inmuebles/mapa/"> Ubicación en mapa</a></li>
+            <li><a href="/inmuebles/lista/?tipo=1"> Casas disponibles</a></li>
+            <li><a href="/inmuebles/lista/?tipo=2"> Apartamentos disponibles</a></li>
+            <li><a href="/inmuebles/lista/?tipo=3"> Locales disponibles</a></li>
+          </ul>
+        </li>
         <li><a><i class="fa fa-money"></i> Sección de pagos <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
             <li><a href="/payment/consultar/"> Consultar facturas por pagar</a></li>
