@@ -126,7 +126,7 @@ class ListarInmuebles(ListView):
             if self.request.user.groups.filter(name='propietario').exists():
                 propietario = Propietario.objects.get(usuario=self.request.user)
                 lista_inmuebles = get_lista_inmuebles_por_tipo(tipo, propietario)
-
+                
             elif self.request.user.groups.filter(name='usuario-inmobiliaria').exists():
                 lista_inmuebles = get_lista_inmuebles_por_tipo(tipo)
 
