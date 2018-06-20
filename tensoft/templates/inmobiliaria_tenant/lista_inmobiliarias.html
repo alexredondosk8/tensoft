@@ -1,0 +1,125 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+  <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block title %} Lista de inmobiliarias {{tipo_lista}} {% endblock title %}
+
+{% block titulo_contenido %}Lista de inmobiliarias{% endblock titulo_contenido %}
+{% block titulo_especifico %}{{tipo_lista}}{% endblock titulo_especifico %}
+
+{% block contenido %}
+<div class="table-responsive">
+  <table id="datatable" class="table table-bordered table-striped bulk_action">
+    <thead>
+      <tr class="headings">
+        {% for campo in campos %}
+          <th>{{campo}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% if lista_alta %}
+        {% for inmobiliaria in lista_alta %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+              <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><button class="btn btn-primary btn-block">Ir a aprobar</button></a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% elif lista_baja %}
+        {% for inmobiliaria in lista_baja %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_solicitud_baja}}</td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+              <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><button class="btn btn-primary btn-block">Ir a aprobar</button></a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% elif lista_activas %}
+        {% for inmobiliaria in lista_activas %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            <td>{{inmobiliaria.get_estado}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+            {% endif %}
+            <td>{{inmobiliaria.get_baja}}</td>
+            <td><a href="http://{{inmobiliaria.schema_name}}.localhost:8000" target="_blank">Visitar página</a></td>
+          </tr>
+        {% endfor %}
+      {% elif lista_inactivas %}
+        {% for inmobiliaria in lista_inactivas %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{inmobiliaria.fecha_baja}}</td>
+            <td>{{inmobiliaria.fecha_solicitud_baja}}</td>
+            <td>{{inmobiliaria.fecha_registro}}</td>
+            <td>{{inmobiliaria.get_revision}}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% elif lista_rechazadas %}
+        {% for inmobiliaria in lista_rechazadas %}
+          <tr>
+            <td><a href="/inmobiliarias/{{inmobiliaria.id}}"><strong>{{inmobiliaria.nombre}}</strong></a></td>
+            <td>{{ inmobiliaria.fecha_revision_rechazo }}</td>
+            <td>{{ inmobiliaria.fecha_registro }}</td>
+            {% if request.user.is_superuser %}
+              <td>{{inmobiliaria.representante}}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <!-- Datatables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#datatable').DataTable( {
+        "order": [[ 1, "asc" ]]
+      });
+    });
+  </script>
+{% endblock javascripts %}

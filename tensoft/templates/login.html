@@ -1,0 +1,116 @@
+{% extends "app/base_site.html" %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title %} Login {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <!-- Animate.css -->
+  <link href="/static/vendors/animate.css/animate.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block body_class %}login{% endblock body_class %}
+
+{% block body %}
+  <div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+
+          <form method="post" data-parsley-validate>
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div>
+              <button class="btn btn-primary btn-block">Iniciar sesión</button>
+            </div>
+            <div>
+              <a href="/cuenta/password_reset/">Olvidé mi contraseña</a>
+            </div>
+            <br />
+            <div class="row">
+              <p><strong>-- O INICIA SESIÓN CON --</strong></p>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <a href="{% url 'social:begin' 'github' %}">
+                  <img src="{% static 'images/redes_autenticacion/github.png' %}" class="img-responsive"/>
+                </a>
+              </div>
+              <div class="col-md-3">
+                <a href="{% url 'social:begin' 'twitter' %}">
+                  <img src="{% static 'images/redes_autenticacion/twitter.png' %}" class="img-responsive"/>
+                </a>
+              </div>
+              <div class="col-md-3">
+                <a href="{% url 'social:begin' 'facebook' %}">
+                  <img src="{% static 'images/redes_autenticacion/facebook.png' %}" class="img-responsive"/>
+                </a>
+              </div>
+              <div class="col-md-3">
+                <a href="{% url 'social:begin' 'google-oauth2' %}">
+                  <img src="{% static 'images/redes_autenticacion/google+.png' %}" class="img-responsive"/>
+                </a>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">¿Deseas trabajar con nosotros?
+                <a href="/cuenta/registrar" class="to_register"> Regístrate aquí </a>
+              </p>
+
+              <div class="clearfix"></div>
+              <br />
+
+              <div>
+                <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div id="register" class="animate form registration_form">
+        <section class="login_content">
+          <form>
+            <h1>Create Account</h1>
+            <div>
+              <input type="text" class="form-control" placeholder="Username" required="" />
+            </div>
+            <div>
+              <input type="email" class="form-control" placeholder="Email" required="" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Password" required="" />
+            </div>
+            <div>
+              <a class="btn btn-default submit" href="index.html">Submit</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">Already a member ?
+                <a href="#signin" class="to_register"> Log in </a>
+              </p>
+
+              <div class="clearfix"></div>
+              <br />
+
+              <div>
+                <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

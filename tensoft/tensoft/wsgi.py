@@ -1,4 +1,4 @@
-"""
+"""/login/?next=/admin/
 WSGI config for tensoft project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.

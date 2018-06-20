@@ -1,0 +1,80 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+  {{ block.super }}
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block contenido %}
+  <h3>Ubicación en mapa de inmuebles registrados</h3>
+  <div id="map"></div>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAd1FhD8VhpFqszLYPEL5rfZtkW5CC9ozk&callback=initMap"
+    type="text/javascript">
+  </script>
+  <script>
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 12,
+        center: {lat: 3.42, lng: -76.52}
+      });
+      var geocoder = new google.maps.Geocoder();
+      var inmuebles = {{ inmuebles | safe }};
+
+      for (i = 0; i < inmuebles.length; i++) {
+        var direccion = inmuebles[i]['direccion'] + ", " + inmuebles[i]['ciudad'] + ", " + inmuebles[i]['pais'];
+        var url = inmuebles[i]['url'];
+        var barrio = inmuebles[i]['barrio'];
+        var tipo = inmuebles[i]['tipo_inmueble'];
+        geocodeAddress(geocoder, map, direccion, url, barrio, tipo);
+      }
+
+    }
+
+    function geocodeAddress(geocoder, resultsMap, direccion, url, barrio, tipo) {
+
+      geocoder.geocode({'address': direccion}, function(results, status) {
+        var contentString = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h1 id="firstHeading" class="firstHeading">' + tipo + ' en ' + barrio + '</h1>'+
+          '<div id="bodyContent">'+
+          '<p>Dirección: ' + direccion + '<br>' +
+          '<a href="'+url+'">Ver detalles del inmueble</a></p>'+
+          '</div>'+
+          '</div>';
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+
+        if (status === 'OK') {
+          resultsMap.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+            map: resultsMap,
+            position: results[0].geometry.location
+          });
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+  </script>
+
+
+  </script>
+{% endblock javascripts %}

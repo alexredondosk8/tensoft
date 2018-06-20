@@ -31,11 +31,81 @@
             <li><a href="index3.html">Dashboard3</a></li>
           </ul> -->
         </li>
-        <li><a><i class="fa fa-building-o"></i> Gestión de inmobiliarias <span class="fa fa-chevron-down"></span></a>
+        {% if request.user.is_authenticated and not request.user.is_superuser %}
+        <li><a><i class="fa fa-user"></i> Mi cuenta <span class="fa fa-chevron-down"></span></a>
           <ul class="nav child_menu">
-            <li><a href="inmobiliarias"> Información general</a></li>
+            <li><a href="/cuenta/my/"> Ver</a></li>
+            <li><a href="/cuenta/actualizar/"> Actualizar</a></li>
+            <li><a href="/cuenta/eliminar/"> Eliminar</a></li>
           </ul>
         </li>
+        {% endif %}
+        {% if request.user.groups.all.0.name == "superadministrador" %}
+        <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmobiliarias/"> Información general</a></li>
+            <li><a href="/inmobiliarias/listado/"> Lista de inmobiliarias</a></li>
+            <li><a href="/inmobiliarias/pendientes-alta/"> En espera de aprobación</a></li>
+            <li><a href="/inmobiliarias/pendientes-baja"> Solicitudes de baja</a></li>
+            <li><a href="/inmobiliarias/activas/"> Activas</a></li>
+            <li><a href="/inmobiliarias/inactivas"> Inactivas</a></li>
+            <li><a href="/inmobiliarias/rechazadas/"> Rechazadas</a></li>
+          </ul>
+        </li>
+        <li><a><i class="fa fa-bar-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/reportes/sexo-clientes/"> Clientes por sexo</a></li>
+            <li><a href="/reportes/edad-clientes/"> Clientes por rango de edad</a></li>
+          </ul>
+        </li>
+        {% elif request.user.groups.all.0.name == "cliente-inmobiliaria" %}
+        <li><a><i class="fa fa-building-o"></i> Gestión inmobiliarias <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmobiliarias/"> Información general</a></li>
+            <li><a href="/inmobiliarias/activas/"> Activas</a></li>
+            <li><a href="/inmobiliarias/registrar/"> Solicitar franquicia</a></li>
+            <li><a href="/inmobiliarias/pendientes-alta/"> En espera de aprobación</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        {% if request.user.groups.all.0.name == "usuario-inmobiliaria" %}
+        <li><a><i class="fa fa-money"></i> Sección de pagos <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/payment/consultar/"> Consultar facturas por pagar</a></li>
+            <li><a href="/payment/historico/"> Consultar facturas pagadas</a></li>
+          </ul>
+        </li>
+        {% elif request.user.groups.all.0.name == "propietario" %}
+        <li><a><i class="fa fa-building"></i> Inmuebles <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="/inmuebles/registrar/"> Registrar nuevo inmueble</a></li>
+            <li><a> Listados <span class="fa fa-chevron-down"></span></a>
+              <ul class="nav child_menu">
+                <li><a href="/inmuebles/lista/activos/"> Todos los activos</a></li>
+                <li><a href="/inmuebles/lista/?estado=1"> Disponibles</a></li>
+                <li><a href="/inmuebles/lista/?estado=2"> Ocupados</a></li>
+                <li><a href="/inmuebles/lista/?estado=3"> No disponibles</a></li>
+                <li><a href="/inmuebles/lista/?tipo=1"> Casas</a></li>
+                <li><a href="/inmuebles/lista/?tipo=2"> Apartamentos</a></li>
+                <li><a href="/inmuebles/lista/?tipo=3"> Locales</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a> Recaudo <span class="fa fa-chevron-down"></span></a>
+              <ul class="nav child_menu">
+                <li><a href="#"> Ver recaudo</a></li>
+                <li><a href="/reportes/recaudos/estado-pagos/"> Estado actual de pagos</a></li>
+                <li><a href="/reportes/recaudos/facturas-vencidas/"> Facturas en mora</a></li>
+                <li><a href="/reportes/recaudos/facturas-activas/"> Facturas activas</a></li>
+                <li><a href="/reportes/recaudos/seguimiento-inmuebles/"> Seguimiento de recaudo por inmueble</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>
