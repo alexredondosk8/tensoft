@@ -108,6 +108,8 @@ class ListarInmuebles(ListView):
         if 'estado' in self.request.GET:
             estado = self.request.GET['estado']
             lista_inmuebles = get_lista_inmuebles(self.request.user, estado)
+            context['var_pdf'] = "estado_operacional"
+            context['id'] = estado
 
             if estado == '1':
                 context['tipo_lista'] = "Inmuebles disponibles"
@@ -120,6 +122,8 @@ class ListarInmuebles(ListView):
             ########### CAMBIAR CUANDO HAYA USUARIO ###########
             propietario = Propietario.objects.get(pk=1)
             tipo = self.request.GET['tipo']
+            context['var_pdf'] = "tipo_inmueble"
+            context['id'] = tipo
 
             lista_inmuebles = get_lista_inmuebles_por_tipo(propietario, tipo)
 
@@ -268,7 +272,8 @@ class GenerarFacturaPago(TemplateView):
                 valor_pago = inmueble.valor,
                 tipo_moneda = inmueble.tipo_moneda,
                 tipo_pago = inmueble.tipo_transaccion,
-                usuario = Usuario.objects.get(cedula='244224'),
+                # CAMBIAR CUANDO SE TENGAN USUARIOS ENLAZADOS
+                usuario = Usuario.objects.get(cedula='25353525'),
                 inmueble = inmueble,
             )
 

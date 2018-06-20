@@ -142,6 +142,14 @@ class Inmueble(models.Model):
     def get_upload_fotos(self):
         return "/inmuebles/registrar/" + str(self.codigo) + "/fotos/"
 
+    def get_estado_operacional_from_id(self, id):
+        if id == 1:
+            return "Disponible"
+        elif id == 2:
+            return "Ocupado"
+        elif id == 3:
+            return "No disponible"
+
 class FotosInmueble(models.Model):
     id = models.AutoField(primary_key=True)
     codigo = models.ForeignKey(Inmueble, on_delete=models.CASCADE, related_name='images')

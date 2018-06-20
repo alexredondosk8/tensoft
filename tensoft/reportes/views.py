@@ -25,11 +25,11 @@ def pdf_generation(request, template_src, context_dict, file_name):
     response['Content-Disposition'] = 'filename="%s"' % file_name
     return response
 
-class ReporteListaInmuebles(TemplateView):
+class ReporteListaInmueblesEstado(TemplateView):
     template_name = ""
 
     def get_context_data(self, **kwargs):
-        context = super(ReporteListaInmuebles, self).get_context_data(**kwargs)
+        context = super(ReporteListaInmueblesEstado, self).get_context_data(**kwargs)
         return context
 
     def get(self, request, *args, **kwargs):
@@ -38,7 +38,39 @@ class ReporteListaInmuebles(TemplateView):
         formato = kwargs['formato']
         estado = int(kwargs['id'])
 
-        context['inmuebles'] = Inmueble.objects.filter(estado=estado).order_by('-fecha_registro')
+        context['inmuebles'] = Inmueble.objects.filter(estado_operacional=estado).order_by('-fecha_registro')
+        context['campos'] = [
+            'Código',
+            'Fecha de registro',
+            'Área',
+            'Barrio',
+            'Municipio',
+        ]
+
+        if formato == 'pdf':
+            context['exportar'] = True
+        else:
+            context['exportar'] = False
+
+        if formato == 'pdf':
+            return pdf_generation(request, "reportes/lista_inmuebles(pdf).html", context, "lista_inmuebles.pdf")
+
+        return render(request, "inmuebles/lista_inmuebles.html", context)
+
+class ReporteListaInmueblesTipo(TemplateView):
+    template_name = ""
+
+    def get_context_data(self, **kwargs):
+        context = super(ReporteListaInmueblesTipo, self).get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        formato = kwargs['formato']
+        estado = int(kwargs['id'])
+
+        context['inmuebles'] = Inmueble.objects.filter(tipo_inmueble=estado).order_by('-fecha_registro')
         context['campos'] = [
             'Código',
             'Fecha de registro',
