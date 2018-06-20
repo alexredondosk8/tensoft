@@ -1,0 +1,96 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}
+  Detalle de la Cita  {{ cita.id_cita }}
+{% endblock title %}
+
+{% block titulo_contenido %}
+  Detalle de Cita
+{% endblock titulo_contenido %}
+
+{% block titulo_especifico %}
+  Detalle de la Cita: {{ object.id_cita }}
+{% endblock titulo_especifico %}
+
+{% block contenido %}
+
+  <div class="col-md-5 col-sm-5 col-xs-12" style="border:0px solid #e5e5e5;">
+
+    <div class="">
+      <h2>Estado</h2>
+      <ul class="list-inline prod_color">
+        {% if object.get_estado_cita == "Pendiente" %}
+          <li>
+            <div class="row">
+              <div class="color bg-orange"></div>
+              <p>Pendiente</p>
+            </div>
+          </li>
+        {% elif object.get_estado_cita == "Realizada"%}
+        <li>
+          <div class="row">
+            <div class="color bg-green"></div>
+            <p>Realizada</p>
+          </div>
+        </li>
+        {% else %}
+          <li>
+            <div class="color bg-red"></div>
+            <p>Cancelada</p>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+    <br />
+
+    <div class="col-md-12">
+
+      <div id="myTabContent" class="tab-content">
+        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Id Cita</strong></td>
+                  <td>{{ object.id_cita }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Inmueble</strong></td>
+                  <td>{{ object.codigo }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Fecha Cita</strong></td>
+                  <td>{{ object.fecha_cita }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Hora de Cita</strong></td>
+                  <td>{{ object.hora_cita }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Hora Final de la Cita</strong></td>
+                  <td>{{ object.hora_fin_cita }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Estado Cita</strong></td>
+                  <td>{{ object.get_estado_cita }}</td>
+                </tr>
+                <tr>
+                  <td><strong>Usuario</strong></td>
+                  <td>{{ object.cedula }}</td>
+                </tr>
+                  <td><strong>Comentarios</strong></td>
+                  <td>{{ object.Comentarios }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endblock contenido %}

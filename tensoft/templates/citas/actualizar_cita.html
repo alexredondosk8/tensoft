@@ -1,0 +1,31 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}
+  Actualizar Cita
+{% endblock title %}
+
+{% block titulo_contenido %}
+  Formulario de Actualizar Citas
+{% endblock titulo_contenido %}
+
+{% block titulo_especifico %}
+  Actualizar Cita
+{% endblock titulo_especifico %}
+
+{% block contenido %}
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_field form.fecha_cita %}
+    {% bootstrap_field form.hora_cita %}
+    {% bootstrap_field form.hora_fin_cita %}
+
+    <center>
+      <button class="btn btn-primary" formmethod="post" name="registrar">
+        Guardar
+      </button>
+    </center>
+  </form>
+{% endblock contenido %}
