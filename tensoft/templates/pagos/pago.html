@@ -6,6 +6,12 @@
 <!-- templates/payment.html -->
 <h1>Pagos usando PayPal</h1>
 <p>Aquí puede pagar su factura usando una cuenta de PayPal</p>
-{{ form.render }}
+
+{% if no_existe %}
+  <hr>
+  <p class="text-danger">{{ no_existe }}</p>
+{% else %}
+  {{ form.render }}
+{% endif %}
 
 {% endblock contenido %}
