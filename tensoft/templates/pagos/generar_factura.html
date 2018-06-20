@@ -27,6 +27,15 @@
         </div>
       </div>
     </div>
+    <div class="control-group form-group">
+      <label class="control-label">Seleccione el usuario</label>
+      <select name="usuario" required class="form-control">
+        <option value="" selected>--------</option>
+        {% for usuario in usuarios %}
+          <option value="{{ usuario.cedula }}">{{ usuario }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </fieldset>
   {% bootstrap_button "Generar Factura" %}
 </form>
