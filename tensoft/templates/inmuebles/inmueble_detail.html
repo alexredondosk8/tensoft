@@ -17,6 +17,17 @@
 
 {% block contenido %}
 
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+        <strong>¡Éxito!</strong> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
 {% if not request.user.is_anonymous %}
   <div class="table-responsive">
     <table class="table table-striped table-bordered">
@@ -89,16 +100,7 @@
     </table>
   </div>
   {% endif %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-        <strong>¡Éxito!</strong> {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
+
   <div class="col-md-7 col-sm-7 col-xs-12">
     <div class="product-image">
       <img id="id-main-image" src="{{ imagenes.0.imagen.url }}" alt="..." />
@@ -124,7 +126,7 @@
     <div class="">
       <h2>Estado</h2>
       <ul class="list-inline prod_color">
-        {% if inmueble.get_estado_operacional == 'Disponible' %}
+        {% if inmueble.get_estado_operacional == "Disponible" %}
           <li>
             <div class="row">
               <div class="color bg-green"></div>

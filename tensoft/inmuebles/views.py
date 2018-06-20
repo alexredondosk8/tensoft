@@ -182,6 +182,8 @@ class DetallesInmueble(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+
+        #context = super(DetallesInmueble, self).get_context_data(**kwargs)
         estado_operacional = request.POST['estado_operacional']
 
         inmueble = Inmueble.objects.get(codigo=kwargs['pk'])
@@ -192,8 +194,8 @@ class DetallesInmueble(DetailView):
 
         messages.add_message(self.request, messages.SUCCESS,
                              'Se actualizó la información del estado exitosamente')
-
-        return render(request, self.template_name)
+        return HttpResponseRedirect("/inmuebles/" + str(inmueble.codigo) + "/")
+        #return render(request, self.template_name, context)
         #return HttpResponseRedirect("")
 
 class ActualizarInmueble(UpdateView):
