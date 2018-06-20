@@ -7,6 +7,7 @@ from inmobiliaria_tenant.views import *
 from inmuebles.views import *
 from RegUsuarios.views import *
 from propietarios.views import *
+from citas.views import *
 from tensoft.settings import *
 from reportes.views import *
 from pagos.views import *
@@ -28,6 +29,13 @@ url_propietario = [
     url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario"),
     url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarPropietario.as_view(), name='actualizar-propietario'),
     url(r'^lista/$', ListarPropietarios.as_view(), name='listar-propietarios'),
+]
+
+url_citas = [
+    url(r'^registrar/(?P<id>[\w.@+-]+)/$', CitasCreateView.as_view(success_url="/citas/lista/?estado=1"), name="registrar-cita"),
+    #url(r'^lista/$', ListarCitas.as_view(), name='listar-citas'),
+    url(r'^(?P<pk>[\w.@+-]+)/$', DetallesCita.as_view(), name='detalles-cita'),
+    url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarCita.as_view(), name='actualizar-cita'),
 ]
 
 url_reportes_recaudos = [
@@ -88,6 +96,7 @@ urlpatterns = [
     url(r'^registrar-mensaje/', admin.site.urls),
     url(r'^inmuebles/', include(url_inmuebles)),
     url(r'^propietarios/', include(url_propietario)),
+    url(r'^citas/', include(url_citas)),
     url(r'^reportes/', include(url_reportes)),
     url(r'^payment/', include(url_payments, namespace="payment")),
     url(r'^paypal/', include('paypal.standard.ipn.urls')),
