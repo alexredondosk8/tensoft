@@ -46,6 +46,8 @@ url_reportes = [
         ReporteListaInmueblesEstado.as_view(), name='reporte-lista-inmuebles-estado'),
     url(r'^lista-inmuebles/(?P<formato>(html|pdf))/tipo_inmueble/(?P<id>[0-9]+)/$',
         ReporteListaInmueblesTipo.as_view(), name='reporte-lista-inmuebles'),
+    url(r'^tipo-inmuebles/$', ReporteInmueblesPorTipo.as_view(), name='reporte-inmuebles-tipo'),
+    url(r'^estado-inmuebles/$', ReporteInmueblesDisponiblesOcupados.as_view(), name='reporte-estado-inmuebles'),
     url(r'^recaudos/', include(url_reportes_recaudos)),
     url(r'^recaudos/', include(url_reportes_citas)),
 ]
