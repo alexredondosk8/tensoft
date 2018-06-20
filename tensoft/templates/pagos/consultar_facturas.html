@@ -22,7 +22,7 @@
           <td>{{ factura.inmueble.direccion }}, {{ factura.inmueble.municipio.nombre }},
            {{ factura.inmueble.municipio.departamento.nombre }}</td>
           <td>{{ factura.get_tipo_pago }}</td>
-          <td><a href="#">Ver más</a></td>
+          <td><a href="/payment/factura/{{ factura.numero_factura }}/">Ver más</a></td>
         </tr>
         {% endfor %}
       </tbody>
