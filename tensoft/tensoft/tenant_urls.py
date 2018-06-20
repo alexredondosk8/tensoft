@@ -3,6 +3,7 @@ from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from inmobiliaria_tenant.views import *
 from inmuebles.views import *
 from RegUsuarios.views import *
 from propietarios.views import *
@@ -14,6 +15,7 @@ url_inmuebles = [
     url(r'^registrar/$', InmueblesCreateView.as_view(), name="registrar-inmueble"),
     url(r'^registrar/(?P<id_inmueble>[\w.@+-]+)/fotos/$', AgregarFotosInmueble.as_view(),
         name="registrar-fotos-inmueble"),
+    url(r'^buscar/$', BuscarInmuebles.as_view(), name='buscar-inmuebles'),
     url(r'^lista/$', ListarInmuebles.as_view(), name='listar-inmuebles'),
     url(r'^mapa/$', InmueblesMapa.as_view(), name='inmuebles-mapa'),
     url(r'^lista/activos/$', ListarInmueblesActivos.as_view(), name='listar-inmuebles'),
@@ -50,6 +52,10 @@ url_reportes = [
 
 url_cuenta = [
     url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
+    url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
+    url(r'^actualizar/$', ClienteUpdateView.as_view(), name="actualizar-usuario"),
+    url(r'^login/$', auth_views.login, name="login-usuario"),
+    url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     url(r'^login/$', auth_views.login, name="login-usuario"),
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),

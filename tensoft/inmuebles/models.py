@@ -149,7 +149,7 @@ class Inmueble(models.Model):
             return "Ocupado"
         elif id == 3:
             return "No disponible"
-
+            
 class FotosInmueble(models.Model):
     id = models.AutoField(primary_key=True)
     codigo = models.ForeignKey(Inmueble, on_delete=models.CASCADE, related_name='images')
