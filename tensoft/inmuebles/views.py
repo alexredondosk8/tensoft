@@ -13,9 +13,10 @@ from .forms import *
 from .utils import *
 from reportes.views import *
 
+
 # Create your views here.
 class InmueblesCreateView(CreateView):
-    #get_success_url = "/inmuebles/lista/?estado=1"
+    # get_success_url = "/inmuebles/lista/?estado=1"
     model = Inmueble
     fields = [
         'tipo_inmueble',
@@ -43,7 +44,7 @@ class InmueblesCreateView(CreateView):
         form = super(InmueblesCreateView, self).get_form(form_class)
 
         ########### CAMBIAR CUANDO HAYA USUARIO #############
-        #propietario = Propietario.objects.get(pk=1)
+        # propietario = Propietario.objects.get(pk=1)
         propietario = Propietario.objects.get(usuario=self.request.user)
 
         form.fields['propietario'].initial = propietario.id_propietario
@@ -61,6 +62,7 @@ class InmueblesCreateView(CreateView):
         codigo = self.object.codigo
         self.success_url = "/inmuebles/registrar/" + str(codigo) + "/fotos/"
         return super().form_valid(form)
+
 
 class AgregarFotosInmueble(TemplateView):
     template_name = "inmuebles/registrar_fotos_inmueble.html"
@@ -92,9 +94,10 @@ class AgregarFotosInmueble(TemplateView):
                 inmueble_imagen.save()
 
             messages.add_message(request, messages.SUCCESS, 'Se añadieron las imágenes del inmuebles'
-                ' exitosamente')
+                                                            ' exitosamente')
 
         return HttpResponseRedirect("/inmuebles/" + str(inmueble.codigo) + "/")
+
 
 class ListarInmuebles(ListView):
     model = Inmueble
@@ -120,12 +123,15 @@ class ListarInmuebles(ListView):
 
         elif 'tipo' in self.request.GET:
             ########### CAMBIAR CUANDO HAYA USUARIO ###########
-            propietario = Propietario.objects.get(pk=1)
             tipo = self.request.GET['tipo']
             context['var_pdf'] = "tipo_inmueble"
             context['id'] = tipo
+            if self.request.user.groups.filter(name='propietario').exists():
+                propietario = Propietario.objects.get(usuario=self.request.user)
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo, propietario)
 
-            lista_inmuebles = get_lista_inmuebles_por_tipo(propietario, tipo)
+            elif self.request.user.groups.filter(name='usuario-inmobiliaria').exists():
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo)
 
             if tipo == '1':
                 context['tipo_lista'] = "Casas"
@@ -138,12 +144,11 @@ class ListarInmuebles(ListView):
 
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-
         context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
-
         context['lista_inmuebles'] = lista_inmuebles
 
         return context
+
 
 class ListarInmueblesActivos(ListView):
     model = Inmueble
@@ -157,23 +162,21 @@ class ListarInmueblesActivos(ListView):
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
         context['tipo_lista'] = 'Inmuebles registrados'
-        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Estado', 'Acción']
+        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
 
         context['lista_inmuebles'] = lista_inmuebles
 
         return context
 
-class DetallesInmueble(DetailView):
 
+class DetallesInmueble(DetailView):
     model = Inmueble
 
     def get_context_data(self, **kwargs):
 
-
         context = super(DetallesInmueble, self).get_context_data(**kwargs)
 
         if self.request.user.groups.filter(name='propietario').exists():
-
             context['propietario'] = "true"
 
             imagenes = FotosInmueble.objects.filter(codigo=kwargs['object'].codigo)
@@ -183,20 +186,27 @@ class DetallesInmueble(DetailView):
 
     def post(self, request, *args, **kwargs):
 
-        #context = super(DetallesInmueble, self).get_context_data(**kwargs)
-        estado_operacional = request.POST['estado_operacional']
-
         inmueble = Inmueble.objects.get(codigo=kwargs['pk'])
 
-        if inmueble.estado_operacional != estado_operacional:
-            inmueble.estado_operacional = estado_operacional
-            inmueble.save()
+        if 'estado_operacional' in request.POST:
+            estado_operacional = request.POST['estado_operacional']
 
-        messages.add_message(self.request, messages.SUCCESS,
-                             'Se actualizó la información del estado exitosamente')
-        return HttpResponseRedirect("/inmuebles/" + str(inmueble.codigo) + "/")
-        #return render(request, self.template_name, context)
-        #return HttpResponseRedirect("")
+            if inmueble.estado_operacional != estado_operacional:
+                inmueble.estado_operacional = estado_operacional
+                inmueble.save()
+
+            messages.add_message(self.request, messages.SUCCESS,
+                                 'Se actualizó la información del estado exitosamente')
+
+            return HttpResponseRedirect("/inmuebles/" + str(inmueble.codigo) + "/")
+            # return HttpResponseRedirect("")
+        elif 'eliminar' in request.POST:
+            inmueble.estado = False
+            inmueble.save()
+            messages.add_message(self.request, messages.SUCCESS,
+                                 'Se eliminó el inmueble exitosamente')
+            return HttpResponseRedirect("/inmuebles/lista/?estado=1")
+
 
 class ActualizarInmueble(UpdateView):
     model = Inmueble
@@ -230,8 +240,9 @@ class ActualizarInmueble(UpdateView):
         print(self.request.POST)
         """form.instance.created_by = self.request.user"""
         messages.add_message(self.request, messages.SUCCESS, 'Se actualizó la información del inmueble'
-            ' exitosamente')
+                                                             ' exitosamente')
         return super().form_valid(form)
+
 
 class InmueblesMapa(TemplateView):
     template_name = "inmuebles/mapa.html"
@@ -255,6 +266,7 @@ class InmueblesMapa(TemplateView):
         context['inmuebles'] = json.dumps(info_mapa)
 
         return context
+
 
 class GenerarFacturaPago(TemplateView):
     template_name = "pagos/generar_factura.html"
@@ -287,15 +299,15 @@ class GenerarFacturaPago(TemplateView):
         if fecha_inicio_formato < fecha_fin_formato:
 
             factura = PagosInmueble(
-                periodo_inicio_factura = fecha_inicio_formato,
-                periodo_final_factura = fecha_fin_formato,
-                fecha_limite_pago = datetime.now()+timedelta(days=10),
-                valor_pago = inmueble.valor,
-                tipo_moneda = inmueble.tipo_moneda,
-                tipo_pago = inmueble.tipo_transaccion,
+                periodo_inicio_factura=fecha_inicio_formato,
+                periodo_final_factura=fecha_fin_formato,
+                fecha_limite_pago=datetime.now() + timedelta(days=10),
+                valor_pago=inmueble.valor,
+                tipo_moneda=inmueble.tipo_moneda,
+                tipo_pago=inmueble.tipo_transaccion,
                 # CAMBIAR CUANDO SE TENGAN USUARIOS ENLAZADOS
-                usuario = Usuario.objects.get(cedula='25353525'),
-                inmueble = inmueble,
+                usuario=Usuario.objects.get(cedula='25353525'),
+                inmueble=inmueble,
             )
 
             factura.save()
@@ -305,6 +317,28 @@ class GenerarFacturaPago(TemplateView):
             return render(request, self.template_name, context)
 
         else:
-            messages.add_message(request, messages.ERROR, 'La fecha de finalización debe ser mayor a '+
-                'la fecha de inicio del periodo')
+            messages.add_message(request, messages.ERROR, 'La fecha de finalización debe ser mayor a ' +
+                                 'la fecha de inicio del periodo')
             return render(request, self.template_name, context)
+
+
+class BuscarInmuebles(TemplateView):
+    template_name = "inmuebles/buscar_inmuebles.html"
+
+    def post(self, request, *args, **kwargs):
+        context = super(BuscarInmuebles, self).get_context_data(**kwargs)
+        print(request.POST)
+        if 'buscar_x_codigo' in request.POST:
+            codigo = request.POST['codigo']
+
+            if codigo:
+                inmueble = Inmueble.objects.get(codigo=codigo)
+                if inmueble:
+                    context['inmueble'] = inmueble
+                else:
+                    context['no_existe'] = "No se encontró ningún inmueble con el código proporcionado"
+
+            else:
+                context['codigo_vacio'] = "Debe proporcionar un código para buscar el inmueble"
+
+        return render(request, self.template_name, context)
