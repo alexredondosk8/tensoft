@@ -153,6 +153,7 @@
       <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
     </div>
     <!-- SOLO PARA EL PROPIETARIO DUEÑO DEL INMUEBLE -->
+    {% if propietario %}
     <div class="row">
       <form method="post">
         {% csrf_token %}
@@ -172,6 +173,7 @@
         {% bootstrap_button "Cambiar estado" button_class="btn btn-primary" name="cambiar_estado" %}
       </form>
     </div>
+    {% endif %}
 
   </div>
 
