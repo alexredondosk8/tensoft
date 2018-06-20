@@ -23,7 +23,9 @@ url_inmuebles = [
 ]
 
 url_propietario = [
-    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
+    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario"),
+    url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarPropietario.as_view(), name='actualizar-propietario'),
+    url(r'^lista/$', ListarPropietarios.as_view(), name='listar-propietarios'),
 ]
 
 url_reportes_recaudos = [
@@ -38,8 +40,10 @@ url_reportes_citas = [
 ]
 
 url_reportes = [
-    url(r'^lista-inmuebles/(?P<formato>(html|pdf))/(?P<id>[\w.@+-]+)/$', ReporteListaInmuebles.as_view(),
-        name='reporte-lista-inmuebles'),
+    url(r'^lista-inmuebles/(?P<formato>(html|pdf))/estado_operacional/(?P<id>[0-9]+)/$',
+        ReporteListaInmueblesEstado.as_view(), name='reporte-lista-inmuebles-estado'),
+    url(r'^lista-inmuebles/(?P<formato>(html|pdf))/tipo_inmueble/(?P<id>[0-9]+)/$',
+        ReporteListaInmueblesTipo.as_view(), name='reporte-lista-inmuebles'),
     url(r'^recaudos/', include(url_reportes_recaudos)),
     url(r'^recaudos/', include(url_reportes_citas)),
 ]
@@ -49,6 +53,11 @@ url_cuenta = [
     url(r'^login/$', auth_views.login, name="login-usuario"),
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
+    url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
     # url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
     # url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
     url(r'^oauth/', include('social_django.urls', namespace='social')),
