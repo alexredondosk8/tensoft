@@ -43,8 +43,8 @@ class InmueblesCreateView(CreateView):
         form = super(InmueblesCreateView, self).get_form(form_class)
 
         ########### CAMBIAR CUANDO HAYA USUARIO #############
-        propietario = Propietario.objects.get(pk=1)
-        #propietario = Propietario.objects.get(usuario=self.request.user)
+        #propietario = Propietario.objects.get(pk=1)
+        propietario = Propietario.objects.get(usuario=self.request.user)
 
         form.fields['propietario'].initial = propietario.id_propietario
         form.fields['propietario'].disabled = True
@@ -168,14 +168,33 @@ class DetallesInmueble(DetailView):
     model = Inmueble
 
     def get_context_data(self, **kwargs):
+
+
         context = super(DetallesInmueble, self).get_context_data(**kwargs)
 
-        print(self.request)
+        if self.request.user.groups.filter(name='propietario').exists():
 
-        imagenes = FotosInmueble.objects.filter(codigo=kwargs['object'].codigo)
-        context['imagenes'] = imagenes
+            context['propietario'] = "true"
+
+            imagenes = FotosInmueble.objects.filter(codigo=kwargs['object'].codigo)
+            context['imagenes'] = imagenes
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        estado_operacional = request.POST['estado_operacional']
+
+        inmueble = Inmueble.objects.get(codigo=kwargs['pk'])
+
+        if inmueble.estado_operacional != estado_operacional:
+            inmueble.estado_operacional = estado_operacional
+            inmueble.save()
+
+        messages.add_message(self.request, messages.SUCCESS,
+                             'Se actualizó la información del estado exitosamente')
+
+        return render(request, self.template_name)
+        #return HttpResponseRedirect("")
 
 class ActualizarInmueble(UpdateView):
     model = Inmueble

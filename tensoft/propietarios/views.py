@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from datetime import datetime
+from django.contrib import messages
 from .forms import *
 from .utils import *
 from .models import *
@@ -47,6 +48,7 @@ class PropietarioCreateView(TemplateView):
            email = datos['email']
            direccion = datos['direccion']
            telefono = datos['telefono']
+           password = datos['pass1']
            propietario_registrado = Propietario(
                nombres=nombres,
                apellidos=apellidos,
@@ -56,18 +58,28 @@ class PropietarioCreateView(TemplateView):
                telefono=telefono
            )
 
-           propietario_registrado.save()
 
-           # try:
-           #     grupo = Group.objects.get(name='propietario-inmobiliaria')
-           #     grupo.user_set.add(nuevo_usuario)
-           # except:
-           #     grupo = Group()
-           #     grupo.name = 'propietario-inmobiliaria'
-           #     grupo.save()
-           #     grupo.user_set.add(nuevo_usuario)
+           propietario_registrado.save()
+           nuevo_usuario = User.objects.create_user(
+               username=email,
+               password=password,
+               email=email
+           )
+           nuevo_usuario.save()
+           propietario_registrado.usuario = nuevo_usuario
+           propietario_registrado.save()
+           try:
+               grupo = Group.objects.get(name='propietario')
+               grupo.user_set.add(nuevo_usuario)
+           except:
+               grupo = Group()
+               grupo.name = 'propietario'
+               grupo.save()
+               grupo.user_set.add(nuevo_usuario)
 
            request.session['identificacion'] = identificacion
+           messages.add_message(self.request, messages.SUCCESS,
+                                'Se actualizó la información del Propietario exitosamente')
            return render(self.request, "app/index.html")
 
        else:
@@ -101,6 +113,7 @@ class ListarPropietarios(ListView):
 
 class ActualizarPropietario(UpdateView):
     model = Propietario
+
     fields = [
         'nombres',
         'apellidos',
@@ -116,9 +129,7 @@ class ActualizarPropietario(UpdateView):
         return context
 
     def form_valid(self, form):
-        #context = super(ActualizarPropietario, self).get_context_data(**kwargs)
-        """form.instance.created_by = self.request.user"""
-        #messages.add_message(self.request, messages.SUCCESS, 'Se actualizó la información del Propietario exitosamente')
+        messages.add_message(self.request, messages.SUCCESS, 'Se actualizó la información del Propietario exitosamente')
         return super().form_valid(form)
         #return HttpResponseRedirect("propietarios/lista_propietarios.html")
 
