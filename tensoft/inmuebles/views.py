@@ -274,6 +274,8 @@ class GenerarFacturaPago(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(GenerarFacturaPago, self).get_context_data(**kwargs)
         inmueble = Inmueble.objects.get(codigo=kwargs['id_inmueble'])
+        usuarios = Usuario.objects.all()
+        context['usuarios'] = usuarios
         context['inmueble'] = inmueble
 
         return context
@@ -305,8 +307,7 @@ class GenerarFacturaPago(TemplateView):
                 valor_pago=inmueble.valor,
                 tipo_moneda=inmueble.tipo_moneda,
                 tipo_pago=inmueble.tipo_transaccion,
-                # CAMBIAR CUANDO SE TENGAN USUARIOS ENLAZADOS
-                usuario=Usuario.objects.get(cedula='25353525'),
+                usuario=Usuario.objects.get(cedula=request.POST['usuario']),
                 inmueble=inmueble,
             )
 
