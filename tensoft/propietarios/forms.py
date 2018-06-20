@@ -26,6 +26,16 @@ class FormRegistroPropietario(forms.Form):
         'class': 'item form-control',
         'placeholder':'Ingrese su correo electrónico'}))
 
+    pass1 = forms.CharField(label="Contrasena", widget=forms.PasswordInput(attrs={
+        'class': 'item form-control',
+        'placeholder':'Ingrese su contrasena'}))
+
+    pass2 = forms.CharField(label="Contrasena2", widget=forms.PasswordInput(attrs={
+        'class': 'item form-control',
+        'placeholder': 'Ingrese su contrasena'}))
+
+
+
 class FormUpdatePropietario(forms.ModelForm):
 
     class Meta:
