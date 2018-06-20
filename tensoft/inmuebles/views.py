@@ -272,7 +272,8 @@ class GenerarFacturaPago(TemplateView):
                 valor_pago = inmueble.valor,
                 tipo_moneda = inmueble.tipo_moneda,
                 tipo_pago = inmueble.tipo_transaccion,
-                usuario = Usuario.objects.get(cedula='244224'),
+                # CAMBIAR CUANDO SE TENGAN USUARIOS ENLAZADOS
+                usuario = Usuario.objects.get(cedula='25353525'),
                 inmueble = inmueble,
             )
 
