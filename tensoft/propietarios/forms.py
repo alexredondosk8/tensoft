@@ -24,9 +24,6 @@ class FormRegistroPropietario(forms.Form):
 
     email = forms.EmailField(label="Correo electrónico", widget=forms.TextInput(attrs={
         'class': 'item form-control',
-<<<<<<< HEAD
-        'placeholder':'Ingrese su correo electrónico'}))
-=======
         'placeholder':'Ingrese su correo electrónico'}))
 
     pass1 = forms.CharField(label="Contrasena", widget=forms.PasswordInput(attrs={
@@ -44,4 +41,3 @@ class FormUpdatePropietario(forms.ModelForm):
     class Meta:
         model = Propietario
         fields = ['identificacion', 'nombres', 'apellidos', 'direccion', 'telefono', 'email']
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
