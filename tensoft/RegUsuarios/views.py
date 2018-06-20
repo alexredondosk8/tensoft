@@ -3,7 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, render_to_response
 from django.core.urlresolvers import reverse
+<<<<<<< HEAD
+from django.views.generic import TemplateView, CreateView, UpdateView
+=======
 from django.views.generic import TemplateView, CreateView
+>>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
 from django.views.generic import ListView
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
