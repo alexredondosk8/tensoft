@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.views.generic import TemplateView
 from django.http import JsonResponse, HttpResponse
+from django.core.exceptions import PermissionDenied
 import simplejson as json
 from django.template import Context
 from django.template.loader import get_template
@@ -322,3 +323,89 @@ class EstadoPagos(TemplateView):
 
 class ConsultarCalendarioCitas(TemplateView):
     template_name = "reportes/citas/calendario_citas.html"
+
+class ReporteInmueblesPorTipo(TemplateView):
+    template_name = "reportes/tipo_inmuebles.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ReporteInmueblesPorTipo, self).get_context_data(**kwargs)
+
+        if self.request.user.groups.filter(name='propietario').exists():
+            propietario = Propietario.objects.get(usuario=self.request.user)
+
+            json_info = [
+                {
+                    'tipo inmueble': 'Casas',
+                    'value': Inmueble.objects.filter(
+                        tipo_inmueble=1,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                },
+                {
+                    'tipo inmueble': 'Apartamentos',
+                    'value': Inmueble.objects.filter(
+                        tipo_inmueble=2,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                },
+                {
+                    'tipo inmueble': 'Locales',
+                    'value': Inmueble.objects.filter(
+                        tipo_inmueble=3,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                }
+            ]
+
+            context['json_info'] = json.dumps(json_info)
+
+            return context
+
+        else:
+            raise PermissionDenied("No tiene permisos para ver esta página")
+
+class ReporteInmueblesDisponiblesOcupados(TemplateView):
+    template_name = "reportes/inmuebles_dispo_ocupados.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ReporteInmueblesDisponiblesOcupados, self).get_context_data(**kwargs)
+
+        if self.request.user.groups.filter(name='propietario').exists():
+            propietario = Propietario.objects.get(usuario=self.request.user)
+
+            json_info = [
+                {
+                    'estado': 'Disponible',
+                    'value': Inmueble.objects.filter(
+                        estado_operacional=1,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                },
+                {
+                    'estado': 'Ocupado',
+                    'value': Inmueble.objects.filter(
+                        estado_operacional=2,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                },
+                {
+                    'estado': 'En remodelación',
+                    'value': Inmueble.objects.filter(
+                        estado_operacional=3,
+                        estado=True,
+                        propietario=propietario
+                    ).count()
+                },
+            ]
+
+            context['json_info'] = json.dumps(json_info)
+
+            return context
+
+        else:
+            raise PermissionDenied("No tiene permisos para ver esta página")
