@@ -66,14 +66,12 @@
       </div>
     </div>
 
-    <div class="">
-<<<<<<< HEAD
-      <button type="button" class="btn btn-warning btn-lg">Solicitar cita</button>
-=======
-      <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
-    </div>
+    {% if self.request.user.groups.all.0.name == "usuario-inmobiliaria" %}
+      <div class="">
+        <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
+      </div>
     <!-- SOLO PARA EL PROPIETARIO DUEÑO DEL INMUEBLE -->
-    {% if propietario %}
+    {% elif propietario %}
     <div class="row">
       <form method="post">
         {% csrf_token %}
@@ -92,7 +90,6 @@
         </div>
         {% bootstrap_button "Cambiar estado" button_class="btn btn-primary" name="cambiar_estado" %}
       </form>
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
     </div>
     {% endif %}
 
@@ -108,12 +105,14 @@
             Detalles del inmueble
           </a>
         </li>
-        <li role="presentation" class="">
-          <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">
-            Profile
-          </a>
-        </li>
+
         {% if propietario %}
+          <li role="presentation" class="">
+            <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">
+              Generar factura
+            </a>
+          </li>
+
           <li role="presentation" class="">
             <a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">
               Eliminar inmueble
@@ -198,11 +197,24 @@
             </table>
           </div>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-          <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
-            booth letterpress, commodo enim craft beer mlkshk aliquip</p>
-        </div>
+
         {% if propietario %}
+
+          <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+            <div class="panel panel-primary">
+              <div class="panel-heading">Zona de generación de pagos</div>
+              <div class="panel-body">
+                <center>
+                  <a href="/inmuebles/generar-pago/{{ inmueble.codigo }}/">
+                    <button name="generar-pago" class="btn btn-primary">
+                      Generar factura
+                    </button>
+                  </a>
+                </center>
+              </div>
+            </div>
+          </div>
+
           <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
             <div class="panel panel-danger">
               <div class="panel-heading">Zona crítica</div>
