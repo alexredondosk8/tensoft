@@ -27,29 +27,35 @@ def payment_cancelled(request):
 
 def payment_process(request):
 
-    print(request)
-    factura = PagosInmueble.objects.get(numero_factura=request.GET['id_factura'])
-    print(factura.valor_pago)
-    host = request.get_host()
-    # What you want the button to do.
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": factura.valor_pago,
-        "item_name": factura,
-        "invoice": str(factura.numero_factura),
-        "currency_code": factura.get_tipo_moneda(),
-        "notify_url": "http://{}{}".format(host, reverse('paypal-ipn')),
-        "return_url": "http://{}{}".format(host, reverse("payment:done")+"?id_factura="+str(factura.numero_factura)),
-        "cancel_return": "http://{}{}".format(host, reverse('payment:cancelled')),
-    }
+    try:
+        factura = PagosInmueble.objects.get(numero_factura=request.GET['id_factura'])
+        print(factura.valor_pago)
+        host = request.get_host()
+        # What you want the button to do.
+        paypal_dict = {
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "amount": factura.valor_pago,
+            "item_name": factura,
+            "invoice": str(factura.numero_factura),
+            "currency_code": factura.get_tipo_moneda(),
+            "notify_url": "http://{}{}".format(host, reverse('paypal-ipn')),
+            "return_url": "http://{}{}".format(host, reverse("payment:done")+"?id_factura="+str(factura.numero_factura)),
+            "cancel_return": "http://{}{}".format(host, reverse('payment:cancelled')),
+        }
 
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {
-        "form": form,
-        "order": str(factura.numero_factura),
-    }
-    return render(request, "pagos/pago.html", context)
+        # Create the instance.
+        form = PayPalPaymentsForm(initial=paypal_dict)
+        context = {
+            "form": form,
+            "order": str(factura.numero_factura),
+        }
+        return render(request, "pagos/pago.html", context)
+
+    except:
+        context = {
+            'no_existe': "No se encontró ninguna factura relacionada"
+        }
+        return render(request, "pagos/pago.html", context)
 
 class ConsultarFacturas(TemplateView):
     template_name="pagos/consultar_facturas.html"
