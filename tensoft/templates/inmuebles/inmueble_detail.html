@@ -16,89 +16,6 @@
 {% endblock titulo_especifico %}
 
 {% block contenido %}
-
-{% if not request.user.is_anonymous %}
-  <div class="table-responsive">
-    <table class="table table-striped table-bordered">
-      <tbody>
-        <tr>
-          <td><strong>Código</strong></td>
-          <td>{{ object.codigo }}</td>
-        </tr>
-        <tr>
-          <td><strong>Tipo de inmueble</strong></td>
-          <td>{{ object.get_tipo_inmueble }}</td>
-        </tr>
-        <tr>
-          <td><strong>Tipo de transacción</strong></td>
-          <td>{{ object.get_tipo_transaccion }}</td>
-        </tr>
-        <tr>
-          <td><strong>Moneda</strong></td>
-          <td>{{ object.get_tipo_moneda }}</td>
-        </tr>
-        <tr>
-          <td><strong>Valor</strong></td>
-          <td>{{ object.valor  | floatformat:2 }}</td>
-        </tr>
-        <tr>
-          <td><strong>Área</strong></td>
-          <td>{{ object.area | floatformat:2}} m<sup>2</sup></td>
-        </tr>
-        <tr>
-          <td><strong>Número de habitaciones</strong></td>
-          <td>{{ object.numero_habitaciones }}</td>
-        </tr>
-        <tr>
-          <td><strong>Número de baños</strong></td>
-          <td>{{ object.numero_baños }}</td>
-        </tr>
-        <tr>
-          <td><strong>¿Tiene garaje para propietarios?</strong></td>
-          <td>{{ object.get_parqueadero }}</td>
-        </tr>
-        <tr>
-          <td><strong>Tipo de parqueadero</strong></td>
-          <td>{{ object.get_tipo_parqueadero }}</td>
-        </tr>
-        <tr>
-          <td><strong>¿Tiene parqueadero para visitantes?</strong></td>
-          <td>{{ object.get_parqueadero_visitantes }}</td>
-        </tr>
-        <tr>
-          <td><strong>Dirección</strong></td>
-          <td>{{ object.direccion }}</td>
-        </tr>
-        <tr>
-          <td><strong>Barrio</strong></td>
-          <td>{{ object.barrio }}</td>
-        </tr>
-        <tr>
-          <td><strong>Estrato socioeconómico</strong></td>
-          <td>{{ object.estrato }}</td>
-        </tr>
-        <tr>
-          <td><strong>Descripción</strong></td>
-          <td>{{ object.descripcion }}</td>
-        </tr>
-        <tr>
-          <td><strong>Estado de operación</strong></td>
-          <td>{{ object.get_estado_operacional }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  {% endif %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-        <strong>¡Éxito!</strong> {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
   <div class="col-md-7 col-sm-7 col-xs-12">
     <div class="product-image">
       <img id="id-main-image" src="{{ imagenes.0.imagen.url }}" alt="..." />
@@ -192,11 +109,13 @@
             Profile
           </a>
         </li>
-        <li role="presentation" class="">
-          <a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">
-            Profile
-          </a>
-        </li>
+        {% if propietario %}
+          <li role="presentation" class="">
+            <a href="#tab_content3" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">
+              Eliminar inmueble
+            </a>
+          </li>
+        {% endif %}
       </ul>
       <div id="myTabContent" class="tab-content">
         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
@@ -279,14 +198,28 @@
           <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo
             booth letterpress, commodo enim craft beer mlkshk aliquip</p>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
-          <p>xxFood truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui
-            photo booth letterpress, commodo enim craft beer mlkshk </p>
-        </div>
+        {% if propietario %}
+          <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+            <div class="panel panel-danger">
+              <div class="panel-heading">Zona crítica</div>
+              <div class="panel-body">
+                <center>
+                  <form method="post">
+                    {% csrf_token %}
+                    <button name="eliminar" class="btn btn-danger">
+                      Eliminar inmueble
+                    </button>
+                  </form>
+                </center>
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 
   </div>
+
 {% endblock contenido %}
 
 {% block javascripts %}
