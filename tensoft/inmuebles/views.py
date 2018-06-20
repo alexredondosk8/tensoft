@@ -108,11 +108,8 @@ class ListarInmuebles(ListView):
         if 'estado' in self.request.GET:
             estado = self.request.GET['estado']
             lista_inmuebles = get_lista_inmuebles(self.request.user, estado)
-<<<<<<< HEAD
-=======
             context['var_pdf'] = "estado_operacional"
             context['id'] = estado
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
 
             if estado == '1':
                 context['tipo_lista'] = "Inmuebles disponibles"
@@ -123,15 +120,15 @@ class ListarInmuebles(ListView):
 
         elif 'tipo' in self.request.GET:
             ########### CAMBIAR CUANDO HAYA USUARIO ###########
-            propietario = Propietario.objects.get(pk=1)
             tipo = self.request.GET['tipo']
-<<<<<<< HEAD
-=======
             context['var_pdf'] = "tipo_inmueble"
             context['id'] = tipo
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
-
-            lista_inmuebles = get_lista_inmuebles_por_tipo(propietario, tipo)
+            if self.request.user.groups.filter(name='propietario').exists():
+                propietario = Propietario.objects.get(usuario=self.request.user)
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo, propietario)
+                
+            elif self.request.user.groups.filter(name='usuario-inmobiliaria').exists():
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo)
 
             if tipo == '1':
                 context['tipo_lista'] = "Casas"
@@ -144,9 +141,7 @@ class ListarInmuebles(ListView):
 
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-
         context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
-
         context['lista_inmuebles'] = lista_inmuebles
 
         return context
@@ -163,7 +158,7 @@ class ListarInmueblesActivos(ListView):
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
         context['tipo_lista'] = 'Inmuebles registrados'
-        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Estado', 'Acción']
+        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
 
         context['lista_inmuebles'] = lista_inmuebles
 
@@ -188,19 +183,27 @@ class DetallesInmueble(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
-        estado_operacional = request.POST['estado_operacional']
 
         inmueble = Inmueble.objects.get(codigo=kwargs['pk'])
 
-        if inmueble.estado_operacional != estado_operacional:
-            inmueble.estado_operacional = estado_operacional
+        if 'estado_operacional' in request.POST:
+            estado_operacional = request.POST['estado_operacional']
+
+            if inmueble.estado_operacional != estado_operacional:
+                inmueble.estado_operacional = estado_operacional
+                inmueble.save()
+
+            messages.add_message(self.request, messages.SUCCESS,
+                                 'Se actualizó la información del estado exitosamente')
+
+            return render(request, self.template_name)
+            #return HttpResponseRedirect("")
+        elif 'eliminar' in request.POST:
+            inmueble.estado = False
             inmueble.save()
-
-        messages.add_message(self.request, messages.SUCCESS,
-                             'Se actualizó la información del estado exitosamente')
-
-        return render(request, self.template_name)
-        #return HttpResponseRedirect("")
+            messages.add_message(self.request, messages.SUCCESS,
+                                 'Se eliminó el inmueble exitosamente')
+            return HttpResponseRedirect("/inmuebles/lista/?estado=1")
 
 class ActualizarInmueble(UpdateView):
     model = Inmueble
@@ -297,12 +300,8 @@ class GenerarFacturaPago(TemplateView):
                 valor_pago = inmueble.valor,
                 tipo_moneda = inmueble.tipo_moneda,
                 tipo_pago = inmueble.tipo_transaccion,
-<<<<<<< HEAD
-                usuario = Usuario.objects.get(cedula='244224'),
-=======
                 # CAMBIAR CUANDO SE TENGAN USUARIOS ENLAZADOS
                 usuario = Usuario.objects.get(cedula='25353525'),
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
                 inmueble = inmueble,
             )
 
@@ -316,3 +315,24 @@ class GenerarFacturaPago(TemplateView):
             messages.add_message(request, messages.ERROR, 'La fecha de finalización debe ser mayor a '+
                 'la fecha de inicio del periodo')
             return render(request, self.template_name, context)
+
+class BuscarInmuebles(TemplateView):
+    template_name = "inmuebles/buscar_inmuebles.html"
+
+    def post(self, request, *args, **kwargs):
+        context = super(BuscarInmuebles, self).get_context_data(**kwargs)
+        print(request.POST)
+        if 'buscar_x_codigo' in request.POST:
+            codigo = request.POST['codigo']
+
+            if codigo:
+                inmueble = Inmueble.objects.get(codigo=codigo)
+                if inmueble:
+                    context['inmueble'] = inmueble
+                else:
+                    context['no_existe'] = "No se encontró ningún inmueble con el código proporcionado"
+
+            else:
+                context['codigo_vacio'] = "Debe proporcionar un código para buscar el inmueble"
+
+        return render(request, self.template_name, context)
