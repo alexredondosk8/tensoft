@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 import os
+from django.contrib.auth.models import User
 
 class Propietario(models.Model):
 
@@ -11,6 +12,10 @@ class Propietario(models.Model):
     direccion = models.CharField(max_length=80)
     telefono = models.CharField(max_length=80)
     email = models.CharField(max_length=80)
+    estado = models.BooleanField(default=True)
+    usuario = models.ForeignKey(User, null=True)
 
+    def get_absolute_url(self):
+        return "/propietarios/" + str(self.id_propietario) + "/actualizar"
 
 # Create your models here.
