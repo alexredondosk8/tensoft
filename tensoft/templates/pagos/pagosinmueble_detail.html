@@ -53,4 +53,8 @@
         , {{ object.inmueble.municipio.departamento.nombre }}</td>
       </tr>
   </table>
+
+  {% if not object.pagada %}
+  <center><a href="/payment/process/?id_factura={{ object.numero_factura }}">Pague aquí con PayPal</a>
+  {% endif %}
 {% endblock contenido %}
