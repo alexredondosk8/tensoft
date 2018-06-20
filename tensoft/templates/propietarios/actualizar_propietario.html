@@ -1,0 +1,38 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">×</span>
+    </button>
+    <strong>¡Éxito!</strong> {{success}}
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_field form.nombres %}
+    {% bootstrap_field form.apellidos %}
+    {% bootstrap_field form.identificacion %}
+    {% bootstrap_field form.email %}
+    {% bootstrap_field form.direccion %}
+    {% bootstrap_field form.telefono %}
+
+    <center>
+      <button class="btn btn-primary" formmethod="post" name="registrar">
+        Guardar
+      </button>
+    </center>
+  </form>
+{% endblock contenido %}
+{% block javascripts %}
+  {{ block.super }}
+  <!--<script type="text/javascript">
+  $(document).on("change","select",function(){
+    $("option[value=" + this.value + "]", this)
+    .attr("selected", true).siblings()
+    .removeAttr("selected")
+    });
+  </script>-->
+{% endblock javascripts %}
+

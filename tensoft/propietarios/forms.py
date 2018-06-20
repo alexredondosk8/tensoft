@@ -25,3 +25,9 @@ class FormRegistroPropietario(forms.Form):
     email = forms.EmailField(label="Correo electrónico", widget=forms.TextInput(attrs={
         'class': 'item form-control',
         'placeholder':'Ingrese su correo electrónico'}))
+
+class FormUpdatePropietario(forms.ModelForm):
+
+    class Meta:
+        model = Propietario
+        fields = ['identificacion', 'nombres', 'apellidos', 'direccion', 'telefono', 'email']
