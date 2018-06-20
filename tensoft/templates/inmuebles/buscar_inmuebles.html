@@ -1,0 +1,49 @@
+{% extends "app/plain_page.html" %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block contenido %}
+  <p>Búsqueda por código web</p>
+  <form class="form-inline" method="post">
+    {% csrf_token %}
+    <label class="" for="id_codigo" name="codigo">Código</label>
+    <input type="text" class="form-control mb-2 mr-sm-2" id="id_codigo" name="codigo">
+    <button type="submit" class="btn btn-primary mb-2" name="buscar_x_codigo">Buscar</button>
+  </form>
+  <hr>
+  {% if inmueble %}
+    <table class="table table-hover jambo_table bulk_action">
+      <tbody>
+        <tr>
+          <td>Tipo de inmueble</td>
+          <td>{{ inmueble.get_tipo_inmueble }}</td>
+        </tr>
+        <tr>
+          <td>Dirección</td>
+          <td>{{ inmueble.direccion }}</td>
+        </tr>
+        <tr>
+          <td>Municipio</td>
+          <td>{{ inmueble.municipio.nombre }}</td>
+        </tr>
+        <tr>
+          <td>Departamento</td>
+          <td>{{ inmueble.municipio.departamento.nombre }}</td>
+        </tr>
+        <tr>
+          <td>Estado</td>
+          <td>{{ inmueble.get_estado_operacional }}</td>
+        </tr>
+        <tr>
+          <td>Acciones</td>
+          <td><a href="/inmuebles/{{ inmueble.codigo }}">Más información</td>
+        </tr>
+      </tbody>
+    </table>
+  {% elif no_existe %}
+    <p class="text-danger">{{ no_existe }}</p>
+  {% elif codigo_vacio %}
+    <p class="text-danger">{{ codigo_vacio }}</p>
+  {% endif %}
+
+{% endblock contenido %}
