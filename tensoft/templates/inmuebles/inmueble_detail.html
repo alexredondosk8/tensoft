@@ -150,7 +150,27 @@
     </div>
 
     <div class="">
-      <button type="button" class="btn btn-warning btn-lg">Solicitar cita</button>
+      <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
+    </div>
+    <!-- SOLO PARA EL PROPIETARIO DUEÑO DEL INMUEBLE -->
+    <div class="row">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <select name="estado_operacional">
+            {% for tipo in inmueble.opt_estado_operacional %}
+              {% if inmueble.estado_operacional == tipo %}
+                <option value="{{ inmueble.estado_operacional }}" selected>
+                  {{ tipo.1 }}
+                </option>
+              {% else %}
+                <option value="{{ tipo.0 }}">{{ tipo.1 }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        {% bootstrap_button "Cambiar estado" button_class="btn btn-primary" name="cambiar_estado" %}
+      </form>
     </div>
 
   </div>
