@@ -120,12 +120,15 @@ class ListarInmuebles(ListView):
 
         elif 'tipo' in self.request.GET:
             ########### CAMBIAR CUANDO HAYA USUARIO ###########
-            propietario = Propietario.objects.get(pk=1)
             tipo = self.request.GET['tipo']
             context['var_pdf'] = "tipo_inmueble"
             context['id'] = tipo
+            if self.request.user.groups.filter(name='propietario').exists():
+                propietario = Propietario.objects.get(usuario=self.request.user)
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo, propietario)
 
-            lista_inmuebles = get_lista_inmuebles_por_tipo(propietario, tipo)
+            elif self.request.user.groups.filter(name='usuario-inmobiliaria').exists():
+                lista_inmuebles = get_lista_inmuebles_por_tipo(tipo)
 
             if tipo == '1':
                 context['tipo_lista'] = "Casas"
@@ -138,9 +141,7 @@ class ListarInmuebles(ListView):
 
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-
         context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
-
         context['lista_inmuebles'] = lista_inmuebles
 
         return context
@@ -306,3 +307,24 @@ class GenerarFacturaPago(TemplateView):
             messages.add_message(request, messages.ERROR, 'La fecha de finalización debe ser mayor a '+
                 'la fecha de inicio del periodo')
             return render(request, self.template_name, context)
+
+class BuscarInmuebles(TemplateView):
+    template_name = "inmuebles/buscar_inmuebles.html"
+
+    def post(self, request, *args, **kwargs):
+        context = super(BuscarInmuebles, self).get_context_data(**kwargs)
+        print(request.POST)
+        if 'buscar_x_codigo' in request.POST:
+            codigo = request.POST['codigo']
+
+            if codigo:
+                inmueble = Inmueble.objects.get(codigo=codigo)
+                if inmueble:
+                    context['inmueble'] = inmueble
+                else:
+                    context['no_existe'] = "No se encontró ningún inmueble con el código proporcionado"
+
+            else:
+                context['codigo_vacio'] = "Debe proporcionar un código para buscar el inmueble"
+
+        return render(request, self.template_name, context)

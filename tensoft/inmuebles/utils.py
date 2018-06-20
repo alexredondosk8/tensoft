@@ -17,9 +17,12 @@ def get_lista_inmuebles(usuario, estado=0):
 
     return []
 
-def get_lista_inmuebles_por_tipo(propietario, tipo):
-    return Inmueble.objects.filter(tipo_inmueble=tipo, propietario=propietario)
-    
+def get_lista_inmuebles_por_tipo(tipo, propietario=None):
+    if propietario == None:
+        return Inmueble.objects.filter(tipo_inmueble=tipo, estado=True, estado_operacional=1)
+    else:
+        return Inmueble.objects.filter(tipo_inmueble=tipo, propietario=propietario)
+
 def insertar_departamentos_municipios(schema_name):
     archivo_dep = open("acciones_previas/departamentos.txt")
     departamentos = archivo_dep.readlines()
