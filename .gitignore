@@ -1,6 +1,7 @@
 tensoft/inmobiliaria_tenant/migrations
-tensoft/tensoft/__pycache__
 tensoft/inmobiliaria_tenant/__pycache__
+tensoft/tensoft/__pycache__
+tensoft/__pycache__
 tensoft/parreporter_tool/migrations
 tensoft/parreporter_tool/__pycache__
 tensoft/inmuebles/migrations

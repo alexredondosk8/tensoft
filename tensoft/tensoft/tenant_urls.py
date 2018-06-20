@@ -3,10 +3,7 @@ from django.contrib.staticfiles.urls import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-<<<<<<< HEAD
 from inmobiliaria_tenant.views import *
-=======
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
 from inmuebles.views import *
 from RegUsuarios.views import *
 from propietarios.views import *
@@ -28,13 +25,9 @@ url_inmuebles = [
 ]
 
 url_propietario = [
-<<<<<<< HEAD
-    url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario")
-=======
     url(r'^registrar$', PropietarioCreateView.as_view(), name="registrar-propietario"),
     url(r'^(?P<pk>[\w.@+-]+)/actualizar/$', ActualizarPropietario.as_view(), name='actualizar-propietario'),
     url(r'^lista/$', ListarPropietarios.as_view(), name='listar-propietarios'),
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
 ]
 
 url_reportes_recaudos = [
@@ -49,27 +42,20 @@ url_reportes_citas = [
 ]
 
 url_reportes = [
-<<<<<<< HEAD
-    url(r'^lista-inmuebles/(?P<formato>(html|pdf))/(?P<id>[\w.@+-]+)/$', ReporteListaInmuebles.as_view(),
-        name='reporte-lista-inmuebles'),
-=======
     url(r'^lista-inmuebles/(?P<formato>(html|pdf))/estado_operacional/(?P<id>[0-9]+)/$',
         ReporteListaInmueblesEstado.as_view(), name='reporte-lista-inmuebles-estado'),
     url(r'^lista-inmuebles/(?P<formato>(html|pdf))/tipo_inmueble/(?P<id>[0-9]+)/$',
         ReporteListaInmueblesTipo.as_view(), name='reporte-lista-inmuebles'),
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
     url(r'^recaudos/', include(url_reportes_recaudos)),
     url(r'^recaudos/', include(url_reportes_citas)),
 ]
 
 url_cuenta = [
     url(r'^registrar/$', UsuarioCreateView.as_view(), name="registrar-usuario"),
-<<<<<<< HEAD
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^actualizar/$', ClienteUpdateView.as_view(), name="actualizar-usuario"),
     url(r'^login/$', auth_views.login, name="login-usuario"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
-=======
     url(r'^login/$', auth_views.login, name="login-usuario"),
     url(r'^registrar/usuario/$', UsuarioClienteCreateView.as_view(), name="registrar-usuario-cliente"),
     url(r'^logout/$', auth_views.logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
@@ -78,7 +64,6 @@ url_cuenta = [
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
->>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
     # url(r'^my/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente"),
     # url(r'^(?P<id_cliente>[\w.@+-]+)/$', login_required(CuentaCliente.as_view()), name="cuenta-cliente")
     url(r'^oauth/', include('social_django.urls', namespace='social')),
