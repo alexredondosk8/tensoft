@@ -325,7 +325,7 @@ class ConsultarCalendarioCitas(TemplateView):
     template_name = "reportes/citas/calendario_citas.html"
 
 class ReporteInmueblesPorTipo(TemplateView):
-    template_name = "reportes/tipo_inmuebles.html"
+    template_name = "reportes/inmuebles/tipo_inmuebles.html"
 
     def get_context_data(self, **kwargs):
         context = super(ReporteInmueblesPorTipo, self).get_context_data(**kwargs)
@@ -368,7 +368,7 @@ class ReporteInmueblesPorTipo(TemplateView):
             raise PermissionDenied("No tiene permisos para ver esta página")
 
 class ReporteInmueblesDisponiblesOcupados(TemplateView):
-    template_name = "reportes/inmuebles_dispo_ocupados.html"
+    template_name = "reportes/inmuebles/inmuebles_dispo_ocupados.html"
 
     def get_context_data(self, **kwargs):
         context = super(ReporteInmueblesDisponiblesOcupados, self).get_context_data(**kwargs)

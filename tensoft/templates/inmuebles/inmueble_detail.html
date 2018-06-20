@@ -134,6 +134,15 @@
       </ul>
       <div id="myTabContent" class="tab-content">
         <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+          {% if propietario %}
+            <a href="/inmuebles/{{ inmueble.codigo }}/actualizar">
+              <button class="btn btn-primary">
+                Actualizar información
+              </button>
+            </a>
+            <br>
+            <br>
+          {% endif %}
           <div class="table-responsive">
             <table class="table table-striped table-bordered">
               <tbody>
