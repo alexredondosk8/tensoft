@@ -11,6 +11,10 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from datetime import datetime
 from .forms import *
+<<<<<<< HEAD
+=======
+from .utils import *
+>>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
 from .models import *
 
 # Create your views here.
@@ -56,9 +60,120 @@ class PropietarioCreateView(TemplateView):
            )
 
            propietario_registrado.save()
+<<<<<<< HEAD
+=======
+
+           # try:
+           #     grupo = Group.objects.get(name='propietario-inmobiliaria')
+           #     grupo.user_set.add(nuevo_usuario)
+           # except:
+           #     grupo = Group()
+           #     grupo.name = 'propietario-inmobiliaria'
+           #     grupo.save()
+           #     grupo.user_set.add(nuevo_usuario)
+
+>>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
            request.session['identificacion'] = identificacion
            return render(self.request, "app/index.html")
 
        else:
            context['form'] = form_propietario
+<<<<<<< HEAD
            return render(request, self.template_name, context)
+=======
+           return render(request, self.template_name, context)
+
+
+class ListarPropietarios(ListView):
+    model = Propietario
+    template_name = "propietarios/lista_propietarios.html"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(ListarPropietarios, self).get_context_data(**kwargs)
+        print(context)
+
+        #estado = self.request.GET['estado']
+
+        #lista_propietarios = get_lista_propietarios(self.request.user)
+        lista_propietarios = Propietario.objects.all()
+        print (lista_propietarios[0].nombres)
+        paginator = Paginator(lista_propietarios, self.paginate_by)
+
+        #context['tipo_lista'] = estado
+        context['campos'] = ['Identificacion', 'Nombres', 'Apellidos', 'Direccion', 'Email', 'Telefono']
+
+        context['lista_propietarios'] = lista_propietarios
+
+        return context
+
+
+class ActualizarPropietario(UpdateView):
+    model = Propietario
+    fields = [
+        'nombres',
+        'apellidos',
+        'identificacion',
+        'email',
+        'direccion',
+        'telefono'
+    ]
+    template_name = "propietarios/actualizar_propietario.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ActualizarPropietario, self).get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form):
+        #context = super(ActualizarPropietario, self).get_context_data(**kwargs)
+        """form.instance.created_by = self.request.user"""
+        #messages.add_message(self.request, messages.SUCCESS, 'Se actualizó la información del Propietario exitosamente')
+        return super().form_valid(form)
+        #return HttpResponseRedirect("propietarios/lista_propietarios.html")
+
+        #return render(self.request, self.template_name, None)
+    #
+    # template_name = "inmobiliaria_tenant/actualizar_cliente.html"
+    #
+    # # form_class = FormUpdateCliente
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(ClienteUpdateView, self).get_context_data(**kwargs)
+    #
+    #     cliente = Cliente.objects.get(usuario=self.request.user)
+    #     context['cliente'] = cliente
+    #
+    #     form = FormUpdateCliente(instance=cliente)
+    #     context['form'] = form
+    #
+    #     return context
+
+    # def post(self, request, *args, **kwargs):
+    #     context = super(ActualizarPropietario, self).get_context_data(**kwargs)
+    #     form = FormUpdatePropietario(request.POST)
+    #     context['form'] = form
+    #
+    #     if form.is_valid():
+    #         identificacion = form.cleaned_data['identificacion']
+    #         nombre = form.cleaned_data['nombre']
+    #         apellidos = form.cleaned_data['apellidos']
+    #         direccion = form.cleaned_data['direccion']
+    #         telefono = form.cleaned_data['telefono']
+    #         email = form.cleaned_data['email']
+    #
+    #         propietario = Propietario.objects.get(usuario=self.request.user)
+    #         context['propietario'] = propietario
+    #
+    #         propietario.identificacion = identificacion
+    #         propietario.nombre = nombre
+    #         propietario.apellidos = apellidos
+    #         propietario.direccion= direccion
+    #         propietario.telefono = telefono
+    #         propietario.email = email
+    #
+    #         propietario.save()
+    #
+    #         context['success'] = "Los datos han sido actualizados correctamente"
+    #
+    #     return render(request, self.template_name, context)
+>>>>>>> 9b91d50a0c45430b46cf369eedec956f2c29996b
