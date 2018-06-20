@@ -11,10 +11,10 @@
   <link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 {% endblock stylesheets %}
 
-{% block title %} Lista de {{ tipo_lista }} {% endblock title %}
+{% block title %} Lista de propietarios {{tipo_lista}} {% endblock title %}
 
-{% block titulo_contenido %}Lista de inmobiliarias{% endblock titulo_contenido %}
-{% block titulo_especifico %}{{ tipo_lista }}{% endblock titulo_especifico %}
+{% block titulo_contenido %}Lista de propietarios{% endblock titulo_contenido %}
+{% block titulo_especifico %}{{tipo_lista}}{% endblock titulo_especifico %}
 
 {% block contenido %}
 <div class="table-responsive">
@@ -27,20 +27,22 @@
       </tr>
     </thead>
     <tbody>
-      {% for inmueble in lista_inmuebles %}
+      {% for propietarios in lista_propietarios %}
       <tr>
-        <td>{{ inmueble.codigo }}</td>
-        <td>{{ inmueble.fecha_registro }}</td>
-        <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
-        <td>{{ inmueble.barrio }}</td>
-        <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
+        <td>{{ propietarios.identificacion }}</td>
+        <td>{{ propietarios.nombres}}</td>
+        <td>{{ propietarios.apellidos }} </td>
+        <td>{{ propietarios.direccion }}</td>
+        <td>{{ propietarios.email }}</td>
+        <td>{{ propietarios.telefono }}</td>
+        <td><a href="/propietarios/{{ propietarios.id_propietario }}/actualizar">Editar</a></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
 <div class="row">
-  <a href="/reportes/lista-inmuebles/pdf/{{ var_pdf }}/{{ id }}">
+  <a href="/reportes/lista-inmuebles/pdf/{{ tipo_lista }}">
     {% bootstrap_button 'Generar reporte PDF' name="reporte_pdf" %}
   </a>
 </div>
