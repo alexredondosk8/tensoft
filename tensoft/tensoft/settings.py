@@ -57,6 +57,7 @@ TENANT_APPS = (    # The following Django contrib apps must be in TENANT_APPS
     'inmuebles',
     'propietarios',
     'RegUsuarios',
+    'citas',
     'pagos',
     'paypal.standard.ipn',
     'django.contrib.humanize',
