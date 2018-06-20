@@ -144,7 +144,7 @@ class ListarInmuebles(ListView):
 
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
-        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
+        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Municipio', 'Acción']
         context['lista_inmuebles'] = lista_inmuebles
 
         return context
@@ -162,7 +162,7 @@ class ListarInmueblesActivos(ListView):
         paginator = Paginator(lista_inmuebles, self.paginate_by)
 
         context['tipo_lista'] = 'Inmuebles registrados'
-        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Acción']
+        context['campos'] = ['Código', 'Fecha de registro', 'Área', 'Barrio', 'Municipio', 'Acción']
 
         context['lista_inmuebles'] = lista_inmuebles
 
@@ -333,10 +333,13 @@ class BuscarInmuebles(TemplateView):
             codigo = request.POST['codigo']
 
             if codigo:
-                inmueble = Inmueble.objects.get(codigo=codigo)
-                if inmueble:
-                    context['inmueble'] = inmueble
-                else:
+                try:
+                    inmueble = Inmueble.objects.get(codigo=codigo)
+                    if inmueble:
+                        context['inmueble'] = inmueble
+                    else:
+                        context['no_existe'] = "No se encontró ningún inmueble con el código proporcionado"
+                except:
                     context['no_existe'] = "No se encontró ningún inmueble con el código proporcionado"
 
             else:

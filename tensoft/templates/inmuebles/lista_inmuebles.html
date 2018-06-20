@@ -17,33 +17,38 @@
 {% block titulo_especifico %}{{ tipo_lista }}{% endblock titulo_especifico %}
 
 {% block contenido %}
-<div class="table-responsive">
-  <table id="datatable" class="table table-bordered table-striped bulk_action">
-    <thead>
-      <tr class="headings">
-        {% for campo in campos %}
-          <th>{{ campo }}</th>
+{% if lista_inmuebles %}
+  <div class="table-responsive">
+    <table id="datatable" class="table table-bordered table-striped bulk_action">
+      <thead>
+        <tr class="headings">
+          {% for campo in campos %}
+            <th>{{ campo }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for inmueble in lista_inmuebles %}
+        <tr>
+          <td>{{ inmueble.codigo }}</td>
+          <td>{{ inmueble.fecha_registro }}</td>
+          <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
+          <td>{{ inmueble.barrio }}</td>
+          <td>{{ inmueble.municipio.nombre }} / {{ inmueble.municipio.departamento.nombre }}</td>
+          <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
+        </tr>
         {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for inmueble in lista_inmuebles %}
-      <tr>
-        <td>{{ inmueble.codigo }}</td>
-        <td>{{ inmueble.fecha_registro }}</td>
-        <td>{{ inmueble.area | floatformat:2 }} m<sup>2</sup></td>
-        <td>{{ inmueble.barrio }}</td>
-        <td><a href="/inmuebles/{{ inmueble.codigo }}/">Ver más</a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-<div class="row">
-  <a href="/reportes/lista-inmuebles/pdf/{{ var_pdf }}/{{ id }}">
-    {% bootstrap_button 'Generar reporte PDF' name="reporte_pdf" %}
-  </a>
-</div>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <a href="/reportes/lista-inmuebles/pdf/{{ var_pdf }}/{{ id }}">
+      {% bootstrap_button 'Generar reporte PDF' name="reporte_pdf" %}
+    </a>
+  </div>
+{% else %}
+<p class="text-danger">No se encontraron inmuebles con la consulta relacionada</p>
+{% endif %}
 {% endblock contenido %}
 {% block javascripts %}
   {{ block.super }}
