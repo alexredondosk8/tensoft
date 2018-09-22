@@ -11,20 +11,12 @@ pipeline {
         echo 'Rama ' + env.BRANCH_NAME
       }
     }
-    stage('Paso 3: integración') {
-      steps {
-        // Checkout main branch
-        git checkout master
-
-        // Merge it with pull request (insert your pull id)
-        git merge --no-ff pull/*/head:+env.BRANCH_NAME
-
-        // TEST Local Merge Branch Compilation If Desired
-        // msbuild ...
-
-        // Push merged information back to git
-        git push origin master
-      }
+    stage ("Merge pull request") {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'credential-value', usernameVariable: 'ACCESS_TOKEN_USERNAME', passwordVariable: 'ACCESS_TOKEN_PASSWORD',)]) {
+            sh "curl -X PUT -d '{\"commit_title\": \"Merge pull request\"}'  https://github.ibm.com/api/v3/repos/org-name/repo-name/pulls/$CHANGE_ID/merge?access_token=$ACCESS_TOKEN_PASSWORD"
+        }
     }
+}
   }
 }
