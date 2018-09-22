@@ -78,9 +78,11 @@
       </div>
     </div>
 
-    {% if self.request.user.groups.all.0.name == "usuario-inmobiliaria" %}
+    {% if not propietario %}
       <div class="">
-        <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
+        <a href="/citas/registrar/{{ inmueble.codigo }}/">
+          <button type="button" class="btn btn-warning btn-lg" name="solicitar">Solicitar cita</button>
+        </a>
       </div>
     <!-- SOLO PARA EL PROPIETARIO DUEÑO DEL INMUEBLE -->
     {% elif propietario %}
