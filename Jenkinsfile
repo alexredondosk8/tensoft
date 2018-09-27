@@ -12,10 +12,10 @@ pipeline {
       }
     }
     stage ("Merge pull request") {
-    steps {
+      steps {
         withCredentials([usernamePassword(credentialsId: 'anderojas1', usernameVariable: 'ACCESS_TOKEN_USERNAME', passwordVariable: 'ACCESS_TOKEN_PASSWORD',)]) {
             echo "curl -X PUT -d '{\"commit_title\": \"Merge pull request\"}'  https://github.ibm.com/api/v3/repos/org-name/repo-name/pulls/$CHANGE_ID/merge?access_token=$ACCESS_TOKEN_PASSWORD"
-        }
+      }
     }
 }
   }
