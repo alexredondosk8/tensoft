@@ -15,7 +15,7 @@ pipeline {
       steps {
         echo "entrando a hacer el pull request y merge"
         withCredentials([usernameColonPassword(credentialsId:'anderojas1', variable:'AnderojasAas1')]) {
-          set +x
+          echo 'accediendo'
         }
       }
     }
