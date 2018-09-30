@@ -22,7 +22,7 @@ pipeline {
     stage("Paso 4: ejecución") {
       steps {
         bat 'git checkout master'
-        bat 'pull . ' + "${env.BRANCH_NAME}"
+        bat 'git pull . ' + "${env.BRANCH_NAME}"
       }
     }
   }
