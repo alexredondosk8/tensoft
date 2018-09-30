@@ -18,7 +18,7 @@ pipeline {
           bat 'git checkout master'
           bat 'git pull . origin/' + "${env.BRANCH_NAME}"
           bat 'git merge'
-          bat 'git push -u origin/master'
+          bat 'git push'
         }
       }
     }
