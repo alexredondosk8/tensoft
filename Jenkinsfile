@@ -12,6 +12,7 @@ pipeline {
       }
     }
     stage ("Paso 3: Rama de desarrollador") {
+      // si no es la rama master entonces ejecuta la integración continua
       when { not { branch 'master' } }
       steps {
         echo "entrando a hacer el pull request y merge"
@@ -24,6 +25,7 @@ pipeline {
       }
     }
     stage ("Paso 3: Rama master") {
+      // si es la rama master no se hace integración
       when { branch 'master'}
       steps {
         echo 'Sólo se ejecuta en ramas de desarroladores'
