@@ -14,8 +14,8 @@ pipeline {
     stage ("Paso 3: Merge pull request") {
       steps {
         echo "entrando a hacer el pull request y merge"
-        withCredentials([usernameColonPassword(credentialsId:'anderojas1', variable:'AnderojasAas1')]) {
-          echo 'accediendo'
+        withCredentials([usernameColonPassword(credentialsId: '954ecaac-dc69-4712-9835-857c65b79f80', variable: 'key_jenkinsfile')]) {
+          // some block
         }
       }
     }
