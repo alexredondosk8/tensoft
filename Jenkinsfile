@@ -11,17 +11,18 @@ pipeline {
         echo 'Rama ' + env.BRANCH_NAME
       }
     }
-    stage ("Paso 3: Merge pull request") {
+    stage ("Paso 3: credenciales") {
       steps {
         echo "entrando a hacer el pull request y merge"
         withCredentials([usernameColonPassword(credentialsId: '954ecaac-dc69-4712-9835-857c65b79f80', variable: 'key_jenkinsfile')]) {
-          workflow {
-            steps {
-              git.exe checkout master
-              git.exe pull . $env.BRANCH_NAME
-            }
-          }
+
         }
+      }
+    }
+    stage("Paso 4: ejecución") {
+      steps {
+        git.exe checkout master
+        git.exe pull . $env.BRANCH_NAME
       }
     }
   }
