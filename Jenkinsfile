@@ -16,8 +16,8 @@ pipeline {
         echo "entrando a hacer el pull request y merge"
         withCredentials([usernameColonPassword(credentialsId: '954ecaac-dc69-4712-9835-857c65b79f80', variable: 'key_jenkinsfile')]) {
           steps {
-            - git checkout master
-            - git pull . env.BRANCH_NAME
+            git checkout master
+            git pull . env.BRANCH_NAME
           }
         }
       }
