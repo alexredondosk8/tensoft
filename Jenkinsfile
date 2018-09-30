@@ -11,7 +11,8 @@ pipeline {
         echo 'Rama ' + env.BRANCH_NAME
       }
     }
-    stage ("Paso 3: credenciales") {
+    stage ("Paso 3: Rama de desarrollador") {
+      when { not { branch 'master' } }
       steps {
         echo "entrando a hacer el pull request y merge"
         withCredentials([usernameColonPassword(credentialsId: '954ecaac-dc69-4712-9835-857c65b79f80', variable: 'key_jenkinsfile')]) {
@@ -20,6 +21,12 @@ pipeline {
           bat 'git merge'
           bat 'git push'
         }
+      }
+    }
+    stage ("Paso 3: Rama master") {
+      when { branch 'master'}
+      steps {
+        echo 'Sólo se ejecuta en ramas de desarroladores'
       }
     }
   }
