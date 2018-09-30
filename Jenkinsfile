@@ -21,8 +21,8 @@ pipeline {
     }
     stage("Paso 4: ejecución") {
       steps {
-        git.exe checkout master
-        git.exe pull . $env.BRANCH_NAME
+        git checkout master
+        git pull . $env.BRANCH_NAME
       }
     }
   }
