@@ -54,7 +54,11 @@
           </div>
         {% endfor %}
       {% endif %}
-      <p>Hola </p>
+      {% if not user.is_anonymous %}
+      <p>Has iniciado sesión como {{ user.username }}</p>
+      {% else %}
+      <p>No has iniciado sesión</p>
+      {% endif %}
     </div>
   </div>
 {% endblock content %}
