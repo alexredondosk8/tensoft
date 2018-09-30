@@ -21,9 +21,10 @@ pipeline {
     }
     stage("Paso 4: ejecución") {
       steps {
-        checkout master
-        echo 'en rama master'
-        pull . $env.BRANCH_NAME
+        script {
+          git checkout master
+          git pull . env.BRANCH_NAME
+        }
       }
     }
   }
