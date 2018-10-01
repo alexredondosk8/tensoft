@@ -20,8 +20,8 @@ pipeline {
           bat 'git checkout master'
           // bat 'git pull . origin/' + "${env.BRANCH_NAME}"
           bat 'git merge origin/' + "${env.BRANCH_NAME}"
-          // bat 'git push'
           bat 'git commit -m "CI - Update master branch - "' + "${env.CHANGE_ID}"
+          bat 'git push'
         }
       }
     }
