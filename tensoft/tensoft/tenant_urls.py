@@ -88,19 +88,19 @@ url_payments = [
     url(r'^done/$', payment_done, name="done"),
     url(r'^cancelled/$', payment_cancelled, name="cancelled"),
 ]
-
-urlpatterns = [
-    url(r'^$', Inicio.as_view(), name='inicio'),
-    url(r'^admin/', admin.site.urls),
-    url(r'^cuenta/', include(url_cuenta)),
-    url(r'^registrar-mensaje/', admin.site.urls),
-    url(r'^inmuebles/', include(url_inmuebles)),
-    url(r'^propietarios/', include(url_propietario)),
-    url(r'^citas/', include(url_citas)),
-    url(r'^reportes/', include(url_reportes)),
-    url(r'^payment/', include(url_payments, namespace="payment")),
-    url(r'^paypal/', include('paypal.standard.ipn.urls')),
-]
+if settings.DEBUG:
+    urlpatterns = [
+        url(r'^$', Inicio.as_view(), name='inicio'),
+        url(r'^admin/', admin.site.urls),
+        url(r'^cuenta/', include(url_cuenta)),
+        url(r'^registrar-mensaje/', admin.site.urls),
+        url(r'^inmuebles/', include(url_inmuebles)),
+        url(r'^propietarios/', include(url_propietario)),
+        url(r'^citas/', include(url_citas)),
+        url(r'^reportes/', include(url_reportes)),
+        url(r'^payment/', include(url_payments, namespace="payment")),
+        url(r'^paypal/', include('paypal.standard.ipn.urls')),
+    ]
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
